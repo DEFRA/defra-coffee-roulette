@@ -1,8 +1,11 @@
+const readline = require( 'readline')
+
 const email = [
   "alice@example.com",
   "bob@example.com",
   "charlie@example.com",
   "david@example.com",
+  "sam@example.com",
 ]
 
 // const previousPairings = {
@@ -18,6 +21,37 @@ const email = [
 //   }
 // }
 
+
+function askQuestion(query) {
+  return new Promise(function(resolve) {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    })
+    rl.question(query, function(answer) {
+      rl.close()
+      resolve(answer)
+    })
+  })
+}
+
+async function determineGroupSize(emailList) {
+  let groupSize = 2
+  if (emailList.length % 2 === 1) {
+    const answer = await askQuestion(
+      `Odd number of participants. Enter group size (must be 2 or greater and less than or equal to ${emailList.length}): `
+    )
+    const size = parseInt(answer.trim(), 10)
+    if (!isNaN(size) && size >= 2 && size <= emailList.length) {
+      groupSize = size
+    } else {
+      console.log(`Invalid group size. Defaulting to 2.`)
+      groupSize = 2
+    }
+  }
+  return groupSize
+}
+
 const previousPairings = {}
 
 //pair key, used creating unique identifier for each pairing
@@ -26,19 +60,18 @@ function createPairKey(listOfEmailsToPair) {
   return pairKey
 }
 // check for previous pairings and create pairing objects if not paired before
-function hasPreviousPairing(email1, email2) {
-  //check if previousPairing object has email1 and/ or 2, then check the pairKeys to see if either were paired
+function hasPreviousPairing(emailGroupList) {
 
-  if(!previousPairings[email1]){
-    previousPairings[email1] = {"pairKeys":[], "hasPairedWith":{}}
-  }
-  if(!previousPairings[email2]){
-    previousPairings[email2] = {"pairKeys":[], "hasPairedWith":{}}
+  //initialise pairings in previousPairing object
+  for (const email of emailGroupList) {
+    if(!previousPairings[email]){
+      previousPairings[email] = {"pairKeys":[], "hasPairedWith":{} }
+    }
   }
 
-  const pairKey = createPairKey ([email1, email2])
-  //only need to check one email as same pair keys are stored in both email
-return previousPairings[email1].pairKeys.includes(pairKey)
+  const pairKey = createPairKey (emailGroupList)
+  //only need to check one email as same pair keys are stored in all emails
+return previousPairings[emailGroupList[0]].pairKeys.includes(pairKey)
 }
 
 function shuffle (emailList){
@@ -60,45 +93,57 @@ function shuffle (emailList){
 
 }
 
-function createPairs(emailList, roundNumber) {
+function createPairs(emailList, roundNumber, groupSize) {
   const shuffledList = shuffle(emailList)
   const pairsList = []
   const used = {}
 
   for (let i = 0; i < shuffledList.length; i++) {
-    const email1 = shuffledList[i]
-    if (used[email1]) continue // Skip if email already used in a pair
-    let foundPair = false
-    for (let j = i + 1; j < shuffledList.length; j++) {
-      const email2 = shuffledList[j]
-      if( used[email2]) continue
-      if (!hasPreviousPairing(email1, email2)) {
-        pairsList.push([email1, email2])
-        used[email1] = true
-        used[email2] = true
-        // update previous pairings
-        const pairKey = createPairKey([email1, email2])
-        previousPairings[email1].pairKeys.push(pairKey)
-        previousPairings[email2].pairKeys.push(pairKey)
-        previousPairings[email1].hasPairedWith[email2] = { date: new Date().toISOString(), round: roundNumber }
-        previousPairings[email2].hasPairedWith[email1] = { date: new Date().toISOString(), round: roundNumber }
-        foundPair = true
-        break
+    if (used[shuffledList[i]]) continue 
+    let group = [shuffledList[i]]
+    for (let j = i + 1; j < shuffledList.length && group.length < groupSize; j++) {
+      if (!used[shuffledList[j]]){
+        group.push(shuffledList[j])
       }
     }
 
-    // communicate to user that new emails are needed as pairs exhausted
-    if (!foundPair) {
-      console.log(`No valid pairs found for ${email1}. Please provide new email addresses.`);
+    if(group.length === groupSize && !hasPreviousPairing(group)){
+      pairsList.push(group)
+      for (const email of group) {
+        used[email] = true
+      }
+
+      //update previous pairings object
+      const pairKey = createPairKey(group)
+      for (let a = 0; a < group.length; a++) {
+        if(!previousPairings[group[a]]) {
+          previousPairings[group[a]] = {"pairKeys":[], "hasPairedWith":{} }
+        }
+        if(!previousPairings[group[a]].pairKeys.includes(pairKey)) {
+          previousPairings[group[a]].pairKeys.push(pairKey)
+        }
+
+        for (let b =0 ; b < group.length; b++) {
+          if(a !== b) {
+            previousPairings[group[a]].hasPairedWith[group[b]] = { date: new Date().toISOString(), round: roundNumber }
+          }
+        }
+      }
+    } else if (group.length < groupSize) {
+      console.log(`Group of size ${group.length} is smaller than the required group size of ${groupSize}. Please provide new email addresses.`);
     }
   }
   return pairsList
 }
 
+async function main () {
+  const groupSize =  await determineGroupSize(email)
+  console.log(createPairs(email, 1, groupSize))
+  console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+  console.log(createPairs(email, 2, groupSize))
+  console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+  console.log(createPairs(email, 3, groupSize))
+  console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+}
 
-console.log(createPairs(email, 1))
-console.log(JSON.stringify(previousPairings, null, 2) + "\n")
-console.log(createPairs(email, 2))
-console.log(JSON.stringify(previousPairings, null, 2) + "\n")
-console.log(createPairs(email, 3))
-console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+main()
