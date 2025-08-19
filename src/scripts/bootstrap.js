@@ -5,15 +5,40 @@ const email = [
   "david@example.com",
 ]
 
+// const previousPairings = {
+//   "alice@example.com": {"pairKeys":["alice@example.com-bob@example.com"],
+//     "hasPairedWith": { "bob@example.com":{"date": "2023-01-01", "round": 1} }},
+//   "bob@example.com": {"pairKeys":["alice@example.com-bob@example.com"],
+//     "hasPairedWith": { "alice@example.com":{"date": "2023-01-01", "round": 1} }},
+//   "charlie@example.com" :{"pairKeys":[],
+//     "hasPairedWith": {}
+//   },
+//   "david@example.com" :{"pairKeys":[],
+//     "hasPairedWith": {}
+//   }
+// }
 
-function createAllPairs(emailList) {
-  const allPairs =[]
-  for ( let i = 0; i < emailList.length; i++) {
-    for (let j = i + 1; j < emailList.length; j++){
-      allPairs.push([emailList[i], emailList[j]])
-    }
+const previousPairings = {}
+
+//pair key, used creating unique identifier for each pairing
+function createPairKey(email1, email2) {
+  const pairKey = [email1, email2].sort().join('-')
+  return pairKey
+}
+// check for previous pairings and create pairing objects if not paired before
+function hasPreviousPairing(email1, email2) {
+  //check if previousPairing object has email1 and/ or 2, then check the pairKeys to see if either were paired
+
+  if(!previousPairings[email1]){
+    previousPairings[email1] = {"pairKeys":[], "hasPairedWith":{}}
   }
-  return allPairs
+  if(!previousPairings[email2]){
+    previousPairings[email2] = {"pairKeys":[], "hasPairedWith":{}}
+  }
+
+  const pairKey = createPairKey (email1, email2)
+  //only need to check one email as same pair keys are stored in both email
+return previousPairings[email1].pairKeys.includes(pairKey)
 }
 
 function shuffle (emailList){
@@ -35,56 +60,45 @@ function shuffle (emailList){
 
 }
 
-function removeUsedPairs(pairsLeft, round){
-  let newPairsLeft =[]
-  for (let i = 0; i < pairsLeft.length; i++){
-    let pair = pairsLeft [i]
-    let found = false
-    for (let j = 0; j < round.length; j++) {
-      let roundPair = round [j]
-      if (
-        (roundPair[0] === pair [0] && roundPair[1] === pair[1]) || 
-        (roundPair[0] === pair [1] && roundPair[1] === pair[0]) 
-      )
-        {found = true
-          break
-        }
-    }
-    if (!found) {
-      newPairsLeft.push(pair)
-    }
-  }
-  return newPairsLeft
-}
+function createPairs(emailList, roundNumber) {
+  const shuffledList = shuffle(emailList)
+  const pairsList = []
+  const used = {}
 
-function distributePairsToRounds (allPairs, emailList){
-  const rounds = []
-  let pairsLeft = [...allPairs]
-
-  while (pairsLeft.length > 0){
-    let round = []
-    let used = new Set()
-    for (let i = 0; i <pairsLeft.length; i++){
-      let [firstEmail, secondEmail] = pairsLeft[i]
-      if(!used.has(firstEmail) && !used.has(secondEmail)){
-        round.push([firstEmail,secondEmail])
-        used.add(firstEmail)
-        used.add(secondEmail)
+  for (let i = 0; i < shuffledList.length; i++) {
+    const email1 = shuffledList[i]
+    if (used[email1]) continue // Skip if email already used in a pair
+    let foundPair = false
+    for (let j = i + 1; j < shuffledList.length; j++) {
+      const email2 = shuffledList[j]
+      if( used[email2]) continue
+      if (!hasPreviousPairing(email1, email2)) {
+        pairsList.push([email1, email2])
+        used[email1] = true
+        used[email2] = true
+        // update previous pairings
+        const pairKey = createPairKey(email1, email2)
+        previousPairings[email1].pairKeys.push(pairKey)
+        previousPairings[email2].pairKeys.push(pairKey)
+        previousPairings[email1].hasPairedWith[email2] = { date: new Date().toISOString(), round: roundNumber }
+        previousPairings[email2].hasPairedWith[email1] = { date: new Date().toISOString(), round: roundNumber }
+        foundPair = true
+        break
       }
     }
 
-    pairsLeft = removeUsedPairs(pairsLeft, round)
-    rounds.push(round)
+    // communicate to user that new emails are needed as pairs exhausted
+    if (!foundPair) {
+      console.log(`No valid pairs found for ${email1}. Please provide new email addresses.`);
+    }
   }
-  return rounds
+  return pairsList
 }
 
 
-
-const allPairs = createAllPairs(email)
-const shufflePairs = shuffle(allPairs)
-const rounds = distributePairsToRounds(shufflePairs)
-
-for (let index = 0; index <rounds.length; index ++){
-  console.log("Round " + (index + 1) + ":", rounds [index])
-}
+console.log(createPairs(email, 1))
+console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+console.log(createPairs(email, 2))
+console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+console.log(createPairs(email, 3))
+console.log(JSON.stringify(previousPairings, null, 2) + "\n")
