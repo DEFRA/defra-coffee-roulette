@@ -21,8 +21,8 @@ const email = [
 const previousPairings = {}
 
 //pair key, used creating unique identifier for each pairing
-function createPairKey(email1, email2) {
-  const pairKey = [email1, email2].sort().join('-')
+function createPairKey(listOfEmailsToPair) {
+  const pairKey = listOfEmailsToPair.slice().sort().join('-')
   return pairKey
 }
 // check for previous pairings and create pairing objects if not paired before
@@ -36,7 +36,7 @@ function hasPreviousPairing(email1, email2) {
     previousPairings[email2] = {"pairKeys":[], "hasPairedWith":{}}
   }
 
-  const pairKey = createPairKey (email1, email2)
+  const pairKey = createPairKey ([email1, email2])
   //only need to check one email as same pair keys are stored in both email
 return previousPairings[email1].pairKeys.includes(pairKey)
 }
@@ -77,7 +77,7 @@ function createPairs(emailList, roundNumber) {
         used[email1] = true
         used[email2] = true
         // update previous pairings
-        const pairKey = createPairKey(email1, email2)
+        const pairKey = createPairKey([email1, email2])
         previousPairings[email1].pairKeys.push(pairKey)
         previousPairings[email2].pairKeys.push(pairKey)
         previousPairings[email1].hasPairedWith[email2] = { date: new Date().toISOString(), round: roundNumber }
