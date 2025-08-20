@@ -37,6 +37,15 @@ if (typeof window !== 'undefined'){
     pre.textContent = JSON.stringify(previousPairings, null, 2)
   }
 
+  function showAlert(message, type = 'danger'){
+    const container = document.getElementById('alert-container')
+    container.innerHTML= `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+    ${message}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`
+  }
+  
+
   document.getElementById('add-bulk-emails-btn').onclick = function() {
     const textarea = document.getElementById('bulk-emails')
     const raw = textarea.value
@@ -65,8 +74,8 @@ if (typeof window !== 'undefined'){
     document.getElementById('pair-btn').onclick = function(){
       const groupSizeInput = document.getElementById('group-size')
       let groupSize = parseInt(groupSizeInput.value, 10)
-      if (isNaN(groupSize) || groupSize < 2 || groupSize > 10) {
-        alert('Please enter a valid group size between 2 and 10.')
+      if (isNaN(groupSize) || groupSize < 2 || groupSize > currentEmails.length) {
+        showAlert('Please enter a valid group size between 2 and ' + currentEmails.length + '.')
         return
       }
       const pairs = createPairs(currentEmails, roundNumber, groupSize)
@@ -75,6 +84,10 @@ if (typeof window !== 'undefined'){
       roundNumber++
     }
 
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      new bootstrap.Tooltip(tooltipTriggerEl)
+    })
     renderEmailList()
     renderHistory()
   })
