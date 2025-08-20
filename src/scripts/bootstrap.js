@@ -5,8 +5,29 @@ import { Tooltip, Toast, Popover } from 'bootstrap'
 import { previousPairings, email, createPairs } from './app'
 
 if (typeof window !== 'undefined'){
+
+  function saveState(){
+    localStorage.setItem('coffeeRouletteEmails', JSON.stringify(currentEmails))
+    localStorage.setItem('coffeeRouletteRound', roundNumber)
+    localStorage.setItem('coffeeRouletteHistory', JSON.stringify(previousPairings))
+  }
+
+  function loadState(){
+    if(localStorage.getItem('coffeeRouletteEmails')){
+      currentEmails = JSON.parse(localStorage.getItem('coffeeRouletteEmails'))
+    }
+    if(localStorage.getItem('coffeeRouletteRound')){
+      roundNumber = parseInt(localStorage.getItem('coffeeRouletteRound'), 10)
+    }
+    if(localStorage.getItem('coffeeRouletteHistory')){
+      Object.assign(previousPairings, JSON.parse(localStorage.getItem('coffeeRouletteHistory')))
+    }
+  }
+
   let currentEmails = [...email]
   let roundNumber = 1
+
+  loadState()
 
   function renderEmailList() {
     const ul = document.getElementById('email-list')
@@ -56,6 +77,7 @@ if (typeof window !== 'undefined'){
       return email.length > 0 && !currentEmails.includes(email)
     })
     currentEmails = currentEmails.concat(emails)
+    saveState()
     renderEmailList()
     textarea.value = ''
   }
@@ -66,6 +88,7 @@ if (typeof window !== 'undefined'){
       const newEmail = input.value.trim()
       if (newEmail && !currentEmails.includes(newEmail)){
         currentEmails.push(newEmail)
+        saveState()
         renderEmailList()
         input.value = ''
       }
@@ -82,12 +105,20 @@ if (typeof window !== 'undefined'){
       renderPairs(pairs)
       renderHistory()
       roundNumber++
+      saveState()
     }
 
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.forEach(function (tooltipTriggerEl) {
       new bootstrap.Tooltip(tooltipTriggerEl)
     })
+
+    document.getElementById('clear-storage-btn').onclick = function(){
+      localStorage.removeItem('coffeeRouletteEmails')
+      localStorage.removeItem('coffeeRouletteRound')
+      localStorage.removeItem('coffeeRouletteHistory')
+      location.reload()
+    }
     renderEmailList()
     renderHistory()
   })
