@@ -30,15 +30,32 @@ if (typeof window !== 'undefined'){
   loadState()
 
   function renderEmailList() {
-    const ul = document.getElementById('email-list')
-    ul.innerHTML = ''
-    currentEmails.forEach(function(email) {
-      const li = document.createElement('li')
-      li.className = 'list-group-item'
-      li.textContent = email
-      ul.appendChild(li)
-    })
-  }
+  const ul = document.getElementById('email-list')
+  ul.innerHTML = ''
+  currentEmails.forEach(function(email, idx) {
+    // Use flex to space content and button
+    const li = document.createElement('li')
+    li.className = 'list-group-item d-flex justify-content-between align-items-center'
+
+    // Email text span
+    const emailSpan = document.createElement('span')
+    emailSpan.textContent = email
+
+    // Remove button
+    const removeBtn = document.createElement('button')
+    removeBtn.className = 'btn btn-sm btn-danger'
+    removeBtn.textContent = 'Remove'
+    removeBtn.onclick = function() {
+      currentEmails.splice(idx, 1)
+      saveState()
+      renderEmailList()
+    }
+
+    li.appendChild(emailSpan)
+    li.appendChild(removeBtn)
+    ul.appendChild(li)
+  })
+}
 
   function renderPairs(pairs){
     const ul = document.getElementById('pairs-list')
@@ -101,6 +118,15 @@ if (typeof window !== 'undefined'){
         showAlert('Please enter a valid group size between 2 and ' + currentEmails.length + '.')
         return
       }
+
+      const remainder = currentEmails.length % groupSize
+      if (remainder !== 0) {
+        showAlert(`The number of participants (${currentEmails.length}) is not divisible by the group size (${groupSize}). ` +
+      `The last group will have ${lastGroupSize} participant${lastGroupSize > 1 ? 's' : ''}. ` +
+      `You can add more participants or proceed to generate pairs.`,
+      'warning')
+      }
+
       const pairs = createPairs(currentEmails, roundNumber, groupSize)
       renderPairs(pairs)
       renderHistory()
