@@ -1,39 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Bootstrap w/ Webpack</title>
   </head>
   <body class="bg-light">
-   
     <div class="d-flex justify-content-center align-items-center min-vh-100">
-      <div class="container py-4 px-3 bg-white rounded shadow" style="max-width: 800px;">
+      <div
+        class="container py-4 px-3 bg-white rounded shadow"
+        style="max-width: 800px"
+      >
         <div id="alert-container"></div>
         <h1 class="text-center mb-4">DEFRA Coffee Roulette</h1>
         <h3>Participants</h3>
         <ul class="list-group" id="email-list"></ul>
         <div class="mb-3">
-        <label for="bulk-emails" class="form-label">Paste List of Emails</label>
-        <textarea id="bulk-emails" class="form-control" rows="3" placeholder="Paste emails, separated by commas, semicolons, or new lines"></textarea>
-        <button id="add-bulk-emails-btn" class="btn btn-secondary btn-sm mt-2">Add Emails</button>
-      </div>
+          <label for="bulk-emails" class="form-label"
+            >Paste List of Emails</label
+          >
+          <textarea
+            id="bulk-emails"
+            class="form-control"
+            rows="3"
+            placeholder="Paste emails, separated by commas, semicolons, or new lines"
+          ></textarea>
+          <button
+            id="add-bulk-emails-btn"
+            class="btn btn-secondary btn-sm mt-2"
+          >
+            Add Emails
+          </button>
+        </div>
 
         <div class="input-group mb-3">
-          <input type="email" id="new-email" class="form-control" placeholder="Add email" />
-          <button id="add-email-btn" class="btn btn-secondary btn-sm">Add Email</button>
+          <input
+            type="email"
+            id="new-email"
+            class="form-control"
+            placeholder="Add email"
+          />
+          <button id="add-email-btn" class="btn btn-secondary btn-sm">
+            Add Email
+          </button>
         </div>
-        <hr>
+        <hr />
         <div class="mb-3">
           <label for="group-size" class="form-label">Group Size</label>
-          <input type="number" id="group-size" class="form-control" value="2" min="2" max="10" />
+          <input
+            type="number"
+            id="group-size"
+            class="form-control"
+            value="2"
+            min="2"
+            max="10"
+          />
         </div>
-        <button id="pair-btn" class="btn btn-primary w-100 mb-3" data-bs-toggle="tooltip" title="Generate new random pairs">Generate New Pairs</button>
+        <button
+          id="pair-btn"
+          class="btn btn-primary w-100 mb-3"
+          data-bs-toggle="tooltip"
+          title="Generate new random pairs"
+        >
+          Generate New Pairs
+        </button>
         <h3 class="mt-4">Pairs This Round</h3>
         <ul class="list-group" id="pairs-list"></ul>
         <h3 class="mt-4">Pairing History</h3>
         <pre id="history"></pre>
-        <button id="clear-storage-btn" class="btn btn-outline-danger mb-3">Clear All Data</button>
+        <button id="clear-storage-btn" class="btn btn-outline-danger mb-3">
+          Clear All Data
+        </button>
       </div>
     </div>
   </body>

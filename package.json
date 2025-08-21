@@ -7,7 +7,9 @@
     "start": "webpack serve",
     "build": "webpack",
     "test:lint": "eslint src/ test/",
-    "lint:fix": "eslint src/ test/ --fix"
+    "lint:fix": "eslint src/ test/ --fix",
+    "lint:html": "htmlhint '**/*.html'",
+    "format": "prettier --write \"src/**/*.{js,html,scss}\""
   },
   "author": "",
   "license": "OGL-UK-3.0",
@@ -17,9 +19,11 @@
     "css-loader": "^7.1.2",
     "eslint": "^9.33.0",
     "html-webpack-plugin": "^5.6.4",
+    "htmlhint": "^1.6.3",
     "mini-css-extract-plugin": "^2.9.4",
     "neostandard": "^0.12.2",
     "postcss-loader": "^8.1.1",
+    "prettier": "^3.6.2",
     "sass": "^1.90.0",
     "sass-loader": "^16.0.5",
     "style-loader": "^4.0.0",
