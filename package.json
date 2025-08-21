@@ -5,7 +5,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve",
-    "build": "webpack"
+    "build": "webpack",
+    "test:lint": "eslint src/ test/",
+    "lint:fix": "eslint src/ test/ --fix"
   },
   "author": "",
   "license": "OGL-UK-3.0",
@@ -13,8 +15,10 @@
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "css-loader": "^7.1.2",
+    "eslint": "^9.33.0",
     "html-webpack-plugin": "^5.6.4",
     "mini-css-extract-plugin": "^2.9.4",
+    "neostandard": "^0.12.2",
     "postcss-loader": "^8.1.1",
     "sass": "^1.90.0",
     "sass-loader": "^16.0.5",
