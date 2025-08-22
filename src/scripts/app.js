@@ -1,8 +1,8 @@
-import { shuffle, createPairKey, hasPreviousPairing } from "./helpers.js";
+import { shuffle, createPairKey, hasPreviousPairing } from "./helpers.js"
 
-const previousPairings = {};
+const previousPairings = {}
 
-const email = [];
+const email = ["one@gmail.com", "two@gmail.com", "three@gmail.com", "four@gmail.com"]
 
 /**
  * Create unique groups for the current round, avoiding previous pairings.
@@ -11,44 +11,44 @@ const email = [];
  * @param {number} groupSize - Desired size of each group.
  * @returns {string[][]} - Array of groups (each group is an array of emails).
  */
-function createPairs(emailList, roundNumber, groupSize) {
-  const shuffledList = shuffle(emailList);
-  const pairsList = [];
-  const used = {};
-
-  // form groups starting from each unused email
-  for (let i = 0; i < shuffledList.length; i++) {
-    if (used[shuffledList[i]]) continue;
-
-    const group = [shuffledList[i]];
-
-    // fill the group with unused emails until it reaches the desired size
-    for (
-      let j = i + 1;
-      j < shuffledList.length && group.length < groupSize;
-      j++
-    ) {
-      if (!used[shuffledList[j]]) {
-        group.push(shuffledList[j]);
-      }
-    }
-
-    // full group formed, pairing created
-    if (group.length === groupSize && !hasPreviousPairing(group)) {
-      pairsList.push(group);
-      for (const email of group) {
-        used[email] = true;
-      }
-
-      // update previous pairings object
-      updatePreviousPairings(group, roundNumber);
-    } else if (group.length < groupSize) {
-      console.log(
-        `Group of size ${group.length} is smaller than the required group size of ${groupSize}. Please provide new email addresses.`,
-      );
+function formGroup(shuffledList, used, startIdx, groupSize) {
+  const group = [shuffledList[startIdx]]
+  for (let i = startIdx + 1; i < shuffledList.length && group.length < groupSize; i++) {
+    if (!used[shuffledList[i]]) {
+      group.push(shuffledList[i])
     }
   }
-  return pairsList;
+  return group
+}
+
+function handleGroup(group, groupSize, pairsList, used, roundNumber) {
+  if (group.length === groupSize && !hasPreviousPairing(group)) {
+    pairsList.push(group)
+    for (const email of group) {
+      console.log(`used email is ${email}, group is ${group}, round is ${roundNumber}`)
+      used[email] = true
+    }
+    updatePreviousPairings(group, roundNumber)
+  } else if (group.length < groupSize) {
+    console.log(
+      `Group of size ${group.length} is smaller than the required group size of ${groupSize}. Please provide new email addresses.`,
+    )
+    console.log(`Group members: ${group}`)
+  }
+}
+
+function createPairs(emailList, roundNumber, groupSize) {
+  const shuffledList = shuffle(emailList)
+  const pairsList = []
+  const used = {}
+
+  for (let i = 0; i < shuffledList.length; i++) {
+    if (used[shuffledList[i]]) continue
+
+    const group = formGroup(shuffledList, used, i, groupSize)
+    handleGroup(group, groupSize, pairsList, used, roundNumber)
+  }
+  return pairsList
 }
 
 /**
@@ -57,13 +57,13 @@ function createPairs(emailList, roundNumber, groupSize) {
  * @param {number} roundNumber - The current round number.
  */
 function updatePreviousPairings(group, roundNumber) {
-  const pairKey = createPairKey(group);
+  const pairKey = createPairKey(group)
   for (let a = 0; a < group.length; a++) {
     if (!previousPairings[group[a]]) {
-      previousPairings[group[a]] = { pairKeys: [], hasPairedWith: {} };
+      previousPairings[group[a]] = { pairKeys: [], hasPairedWith: {} }
     }
     if (!previousPairings[group[a]].pairKeys.includes(pairKey)) {
-      previousPairings[group[a]].pairKeys.push(pairKey);
+      previousPairings[group[a]].pairKeys.push(pairKey)
     }
 
     for (let b = 0; b < group.length; b++) {
@@ -71,22 +71,18 @@ function updatePreviousPairings(group, roundNumber) {
         previousPairings[group[a]].hasPairedWith[group[b]] = {
           date: new Date().toISOString(),
           round: roundNumber,
-        };
+        }
       }
     }
   }
 }
 
-async function main() {
-  const groupSize = 2;
-  console.log(createPairs(email, 1, groupSize));
-  console.log(JSON.stringify(previousPairings, null, 2) + "\n");
-  console.log(createPairs(email, 2, groupSize));
-  console.log(JSON.stringify(previousPairings, null, 2) + "\n");
-  console.log(createPairs(email, 3, groupSize));
-  console.log(JSON.stringify(previousPairings, null, 2) + "\n");
-}
+const groupSize = 2
+console.log(createPairs(email, 1, groupSize))
+console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+console.log(createPairs(email, 2, groupSize))
+console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+console.log(createPairs(email, 3, groupSize))
+console.log(JSON.stringify(previousPairings, null, 2) + "\n")
 
-main();
-
-export { previousPairings, email, createPairs };
+export { previousPairings, createPairs }
