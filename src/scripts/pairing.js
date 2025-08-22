@@ -314,22 +314,17 @@ function removeDuplicates(emailList) {
 /**
  * Test code - example usage demonstration
  */
-console.log("\n=== Testing with 5 emails, group size 2 ===")
-const emails5 = ["a@x", "b@x", "c@x", "d@x", "e@x"]
+// console.log("\n=== Testing with 5 emails, group size 2 ===")
+// const emails5 = ["a@x", "b@x", "c@x", "d@x", "e@x"]
 
-for (let i = 1; i <= emails5.length - 1; i++) {
-  console.log(`\nRound ${i}:`)
-  const groups = createPairs(emails5, 2, true, true)
-  console.log("Groups:", groups)
-  console.log("Current round:", getCurrentRoundNumber())
-}
+// for (let i = 1; i <= emails5.length - 1; i++) {
+//   console.log(`\nRound ${i}:`)
+//   const groups = createPairs(emails5, 2, true, true)
+//   console.log("Groups:", groups)
+//   console.log("Current round:", getCurrentRoundNumber())
+// }
 
-console.log("\nFinal pairing history:")
-console.log(JSON.stringify(previousPairings, null, 2))
+// console.log("\nFinal pairing history:")
+// console.log(JSON.stringify(previousPairings, null, 2))
 
-export {
-  createPairs,
-  previousPairings,
-  getCurrentRoundNumber, // Export additional useful functions
-  resetPairingHistory,
-}
+export { createPairs, previousPairings, getCurrentRoundNumber, resetPairingHistory }
