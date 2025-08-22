@@ -3,48 +3,131 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bootstrap w/ Webpack</title>
+    <title>DEFRA Coffee Roulette</title>
   </head>
   <body class="bg-light">
-    <div class="d-flex justify-content-center align-items-center min-vh-100">
-      <div class="container py-4 px-3 bg-white rounded shadow" style="max-width: 800px">
-        <div id="alert-container"></div>
-        <h1 class="text-center mb-4">DEFRA Coffee Roulette</h1>
-        <h3>Participants</h3>
-        <ul class="list-group" id="email-list"></ul>
-        <div class="mb-3">
-          <label for="bulk-emails" class="form-label">Paste List of Emails</label>
-          <textarea
-            id="bulk-emails"
-            class="form-control"
-            rows="3"
-            placeholder="Paste emails, separated by commas, semicolons, or new lines"
-          ></textarea>
-          <button id="add-bulk-emails-btn" class="btn btn-secondary btn-sm mt-2">Add Emails</button>
-        </div>
+    <div class="container-fluid py-4">
+      <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+          <div id="alert-container"></div>
+          <h1 class="text-center mb-4">DEFRA Coffee Roulette</h1>
 
-        <div class="input-group mb-3">
-          <input type="email" id="new-email" class="form-control" placeholder="Add email" />
-          <button id="add-email-btn" class="btn btn-secondary btn-sm">Add Email</button>
+          <div class="row">
+            <!-- Left Column: Setup -->
+            <div class="col-lg-5 mb-4">
+              <!-- Participants Card (Collapsible) -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <button
+                    class="btn btn-link text-decoration-none p-0 w-100 text-start d-flex justify-content-between align-items-center"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#participants-collapse"
+                    aria-expanded="true"
+                  >
+                    <h5 class="mb-0">Participants</h5>
+                    <span class="badge bg-primary" id="participant-count">0 participants</span>
+                  </button>
+                </div>
+                <div id="participants-collapse" class="collapse show">
+                  <div class="card-body">
+                    <ul class="list-group mb-3" id="email-list"></ul>
+
+                    <!-- Bulk Email Input -->
+                    <div class="mb-3">
+                      <label for="bulk-emails" class="form-label">Paste List of Emails</label>
+                      <textarea
+                        id="bulk-emails"
+                        class="form-control"
+                        rows="3"
+                        placeholder="Paste emails, separated by commas, semicolons, or new lines"
+                      ></textarea>
+                      <button id="add-bulk-emails-btn" class="btn btn-secondary btn-sm mt-2">Add Emails</button>
+                    </div>
+
+                    <!-- Single Email Input -->
+                    <div class="input-group">
+                      <input type="email" id="new-email" class="form-control" placeholder="Add email" />
+                      <button id="add-email-btn" class="btn btn-secondary">Add Email</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pairing Settings Card -->
+              <div class="card">
+                <div class="card-header">
+                  <h5 class="mb-0">Pairing Settings</h5>
+                </div>
+                <div class="card-body">
+                  <div class="mb-3">
+                    <label for="group-size" class="form-label">Group Size</label>
+                    <input type="number" id="group-size" class="form-control" value="2" min="2" max="10" />
+                    <div class="form-text">Recommended: 2-3 people per group</div>
+                  </div>
+                  <button
+                    id="pair-btn"
+                    class="btn btn-primary w-100"
+                    data-bs-toggle="tooltip"
+                    title="Generate new random pairs"
+                  >
+                    🎲 Generate New Pairs
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Results -->
+            <div class="col-lg-7">
+              <!-- Current Pairs Card -->
+              <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5 class="mb-0">Pairs This Round</h5>
+                  <div class="btn-group btn-group-sm" role="group">
+                    <button id="export-pairs-btn" class="btn btn-outline-secondary" title="Email pairs to participants">
+                      📧 Email
+                    </button>
+                    <button id="regenerate-btn" class="btn btn-outline-secondary" title="Generate different pairs">
+                      🔄 Regenerate
+                    </button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <ul class="list-group" id="pairs-list">
+                    <li class="list-group-item text-muted text-center">Click "Generate New Pairs" to create pairs</li>
+                  </ul>
+                </div>
+              </div>
+
+              <!-- History Card (Collapsible) -->
+              <div class="card">
+                <div class="card-header">
+                  <button
+                    class="btn btn-link text-decoration-none p-0 w-100 text-start d-flex justify-content-between align-items-center"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#history-collapse"
+                  >
+                    <h5 class="mb-0">📊 Pairing History</h5>
+                    <span class="badge bg-secondary" id="history-badge">0 rounds</span>
+                  </button>
+                </div>
+                <div id="history-collapse" class="collapse">
+                  <div class="card-body">
+                    <div id="history"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div class="row mt-4">
+            <div class="col-12 text-center">
+              <button id="clear-storage-btn" class="btn btn-outline-danger">🗑️ Clear All Data</button>
+            </div>
+          </div>
         </div>
-        <hr />
-        <div class="mb-3">
-          <label for="group-size" class="form-label">Group Size</label>
-          <input type="number" id="group-size" class="form-control" value="2" min="2" max="10" />
-        </div>
-        <button
-          id="pair-btn"
-          class="btn btn-primary w-100 mb-3"
-          data-bs-toggle="tooltip"
-          title="Generate new random pairs"
-        >
-          Generate New Pairs
-        </button>
-        <h3 class="mt-4">Pairs This Round</h3>
-        <ul class="list-group" id="pairs-list"></ul>
-        <h3 class="mt-4">Pairing History</h3>
-        <pre id="history"></pre>
-        <button id="clear-storage-btn" class="btn btn-outline-danger mb-3">Clear All Data</button>
       </div>
     </div>
   </body>
