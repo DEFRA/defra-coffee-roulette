@@ -93,18 +93,27 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
     }
   }
 
-  // Second pass: pair any remaining participants (allowing odd if true)
+  // Second pass: handle remaining participants
   const remaining = availableParticipants.filter(function (p) {
     return !used.has(p)
   })
+
   if (remaining.length === 1 && allowOddGroup && pairs.length > 0) {
-    // Add to the last pair
+    // Add to the last pair to make a group of 3
     pairs[pairs.length - 1].push(remaining[0])
-  } else {
+  } else if (remaining.length >= 2 && allowOddGroup) {
+    // Only pair remaining participants if allowOddGroup is true
+    // This allows some duplicates when necessary to include everyone
     for (let i = 0; i < remaining.length - 1; i += 2) {
       pairs.push([remaining[i], remaining[i + 1]])
     }
+    
+    // Handle the last remaining participant if odd number
+    if (remaining.length % 2 === 1 && pairs.length > 0) {
+      pairs[pairs.length - 1].push(remaining[remaining.length - 1])
+    }
   }
+  // If allowOddGroup is false, remaining participants sit out to avoid duplicates
 
   return pairs
 }
@@ -118,12 +127,15 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
  * @returns {string|null} Best matching partner or null if no suitable partner found
  */
 function findBestPartner(participant, availableParticipants, used) {
+  // First, try to find someone who hasn't paired with this participant before
   for (const potentialPartner of availableParticipants) {
     if (potentialPartner === participant || used.has(potentialPartner)) continue
     if (!hasPreviousPairing([participant, potentialPartner])) {
       return potentialPartner
     }
   }
+  
+  // If no new partners available, return null to let second pass handle duplicates
   return null
 }
 
@@ -136,12 +148,41 @@ function findBestPartner(participant, availableParticipants, used) {
  * @returns {string[][]} Generated groups for this round
  */
 function generateGroupsAvoidingRepeats(participants, groupSize, allowOddGroup) {
+  const availableParticipants = participants.filter(function (p) {
+    return p !== "Sit_Out"
+  })
+
+  // If we have exactly one group of the target size, check if it's been done before
+  if (availableParticipants.length === groupSize) {
+    const potentialGroup = [...availableParticipants]
+    if (hasPreviousPairing(potentialGroup)) {
+      // This exact group composition has been done before
+      console.log("This group composition has already been used in a previous round")
+      return [] // Return empty array to indicate no valid grouping possible
+    }
+    return [potentialGroup]
+  }
+
+  // For multiple groups, we need more sophisticated logic
   const groups = []
-  let remaining = [...participants]
+  let remaining = [...availableParticipants]
 
   while (remaining.length >= groupSize) {
     const group = remaining.splice(0, groupSize)
-    groups.push(group)
+    
+    // Check if this specific group has been used before
+    if (!hasPreviousPairing(group)) {
+      groups.push(group)
+    } else {
+      // If allowOddGroup is true, we might still use it
+      // If false, we should avoid it
+      if (allowOddGroup) {
+        groups.push(group) // Allow duplicates when odd groups are permitted
+      } else {
+        // Don't use this group, participants will sit out
+        console.log(`Skipping group ${group.join(", ")} - already used in previous round`)
+      }
+    }
   }
 
   if (remaining.length > 0 && allowOddGroup && groups.length > 0) {

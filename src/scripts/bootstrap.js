@@ -191,7 +191,9 @@ Best regards,`
 
         const participantHeader = document.createElement("h6")
         participantHeader.className = "mb-2 text-primary"
-        participantHeader.textContent = `${participantEmail} has paired with:`
+        // Use formatted name instead of email
+        const participantName = extractNameFromEmail(participantEmail)
+        participantHeader.textContent = `${participantName} has paired with:`
 
         const partnersList = document.createElement("div")
         partnersList.className = "ms-3"
@@ -275,23 +277,39 @@ Best regards,`
         return
       }
 
-      const remainder = getCurrentEmails().length % groupSize
+      const totalParticipants = getCurrentEmails().length
+      const remainder = totalParticipants % groupSize
+      const maxPossibleGroups = Math.floor(totalParticipants / groupSize)
+      const participantsWhoWillSitOut = remainder
+
       if (remainder !== 0) {
-        const lastGroupSize = remainder
         if (allowOddGroups) {
           showAlert(
-            `The number of participants (${getCurrentEmails().length}) is not divisible by the group size (${groupSize}). ` +
-              `The last group will have ${groupSize + lastGroupSize} participants (${lastGroupSize} extra). ` +
+            `The number of participants (${totalParticipants}) is not divisible by the group size (${groupSize}). ` +
+              `The last group will have ${groupSize + remainder} participants (${remainder} extra). ` +
               "Proceeding to generate pairs with uneven groups.",
             "info",
           )
         } else {
-          showAlert(
-            `The number of participants (${getCurrentEmails().length}) is not divisible by the group size (${groupSize}). ` +
-              `${lastGroupSize} participant${lastGroupSize > 1 ? "s" : ""} will sit out this round. ` +
-              "You can enable 'Allow Odd Groups' to include everyone, add more participants, or remove some.",
-            "warning",
-          )
+          // Check if too many people would sit out (more than reasonable)
+          const sitOutPercentage = (participantsWhoWillSitOut / totalParticipants) * 100
+          
+          if (sitOutPercentage > 25) { // If more than 25% would sit out
+            const participantsNeeded = groupSize - remainder
+            showAlert(
+              `Warning: ${participantsWhoWillSitOut} participant${participantsWhoWillSitOut > 1 ? "s" : ""} (${Math.round(sitOutPercentage)}%) would sit out this round. ` +
+                `Consider adding ${participantsNeeded} more participant${participantsNeeded > 1 ? "s" : ""} to reach ${totalParticipants + participantsNeeded} total, ` +
+                `or enable 'Allow Odd Groups' to include everyone.`,
+              "warning",
+            )
+            return // Prevent pairing
+          } else {
+            showAlert(
+              `${participantsWhoWillSitOut} participant${participantsWhoWillSitOut > 1 ? "s" : ""} will sit out this round to avoid duplicate pairings. ` +
+                "You can enable 'Allow Odd Groups' to include everyone with some potential duplicate pairings.",
+              "warning",
+            )
+          }
         }
       }
 
