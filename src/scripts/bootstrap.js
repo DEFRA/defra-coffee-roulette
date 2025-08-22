@@ -19,7 +19,6 @@ import {
 if (typeof window !== "undefined") {
   loadState()
 
-
   // Update participant count
   function updateParticipantCount() {
     const count = getCurrentEmails().length
@@ -61,7 +60,8 @@ if (typeof window !== "undefined") {
       const removeBtn = document.createElement("button")
       removeBtn.className = "btn btn-sm btn-outline-danger"
       removeBtn.innerHTML = "✕"
-      removeBtn.title = "Remove participant"
+      removeBtn.title = "Remove this participant from the list"
+      removeBtn.setAttribute("data-bs-toggle", "tooltip")
       removeBtn.onclick = function () {
         removeEmail(email)
         saveState()
@@ -75,6 +75,22 @@ if (typeof window !== "undefined") {
     })
 
     updateParticipantCount()
+
+    // Reinitialize tooltips for dynamically created elements
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+      new Tooltip(tooltipTriggerEl)
+    })
+  }
+
+  function extractNameFromEmail(email) {
+    const namePart = email.split("@")[0]
+
+    const nameParts = namePart.split(".").map(function (part) {
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+    })
+
+    return nameParts.join(" ")
   }
 
   // Add export functionality
@@ -83,14 +99,60 @@ if (typeof window !== "undefined") {
     if (pairs.length === 0) return
 
     const pairText = Array.from(pairs)
-      .map((li) => li.textContent)
+      .map(function (li) {
+        const pairEmails = li.textContent.split(" & ")
+        const pairNames = pairEmails.map(extractNameFromEmail)
+        return pairNames.join(" and ")
+      })
       .join("\n")
+
     const roundNumber = getRoundNumber()
+    const allEmails = []
+    pairs.forEach(function (li) {
+      const pairText = li.textContent
+      const emailsInPair = pairText.split(" & ")
+      allEmails.push(...emailsInPair)
+    })
 
-    const emailBody = `Coffee Roulette - Round ${roundNumber}\n\n${pairText}\n\nHappy coffee chatting! ☕`
-    const subject = `Coffee Roulette Pairs - Round ${roundNumber}`
+    const uniqueEmails = [...new Set(allEmails)]
+    const emailList = uniqueEmails.join(";")
 
-    window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`)
+    const currentDate = new Date()
+    const monthName = currentDate.toLocaleString("default", { month: "long" })
+    const year = currentDate.getFullYear()
+    const teamName = "DDTS Digital Team"
+
+    const emailBody = `Hi firstname,
+
+Below in the table are all the matches for the ${monthName} round of the DDTS coffee roulette. Please take a look below to find your name and your opposite match, then feel free to arrange a 30 minute virtual coffee break in the next few weeks.
+
+If you require any further help or guidance or know someone who would like to join our coffee roulette, please do not hesitate to email the ${teamName}.
+
+How to find your match:
+
+You can search for your name within the email table, select the 'Find' tab with a spyglass icon from the tool bar or press F4, then insert your name in the 'Find what' box and click on 'Find Next'.
+
+We hope you really enjoy your coffee roulette and for those new this month, here are a few questions to get your conversation started, but feel free to choose your own topics too:
+
+• Tell me about your background and how did you get started in your career?
+• What do you do on a day to day basis?
+• What's the favourite part of your job?
+• What would you be doing if you weren't in your current job?
+• What do you spend your free time on?
+
+${monthName} ${year} Coffee Roulette Matches:
+
+${pairText}
+
+Happy coffee chatting! ☕
+
+Best regards,`
+
+    const subject = `Coffee Roulette - Round ${roundNumber}`
+
+    window.open(
+      `mailto:?bcc=${encodeURIComponent(emailList)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
+    )
   }
 
   function renderPairs(pairs) {
@@ -206,10 +268,11 @@ if (typeof window !== "undefined") {
     document.getElementById("regenerate-btn").onclick = function () {
       const groupSizeInput = document.getElementById("group-size")
       const groupSize = parseInt(groupSizeInput.value, 10)
+      const allowOddGroups = document.getElementById("allow-odd-groups").checked
 
       if (getCurrentEmails().length >= groupSize) {
         // Regenerate without incrementing round number
-        const pairs = createPairs(getCurrentEmails(), groupSize)
+        const pairs = createPairs(getCurrentEmails(), groupSize, true, allowOddGroups)
         setPreviousPairings(previousPairings)
         renderPairs(pairs)
         renderHistory()
@@ -220,9 +283,7 @@ if (typeof window !== "undefined") {
     document.getElementById("pair-btn").onclick = function () {
       const groupSizeInput = document.getElementById("group-size")
       const groupSize = parseInt(groupSizeInput.value, 10)
-      // / Debug the value
-      console.log("Group size input value:", groupSizeInput.value)
-      console.log("Parsed group size:", groupSize)
+      const allowOddGroups = document.getElementById("allow-odd-groups").checked
 
       if (isNaN(groupSize) || groupSize < 2 || groupSize > getCurrentEmails().length) {
         showAlert("Please enter a valid group size between 2 and " + getCurrentEmails().length + ".")
@@ -232,15 +293,24 @@ if (typeof window !== "undefined") {
       const remainder = getCurrentEmails().length % groupSize
       if (remainder !== 0) {
         const lastGroupSize = remainder
-        showAlert(
-          `The number of participants (${getCurrentEmails().length}) is not divisible by the group size (${groupSize}). ` +
-            `The last group will have ${lastGroupSize} participant${lastGroupSize > 1 ? "s" : ""}. ` +
-            "You can add more participants, remove some, or proceed to generate pairs.",
-          "warning",
-        )
+        if (allowOddGroups) {
+          showAlert(
+            `The number of participants (${getCurrentEmails().length}) is not divisible by the group size (${groupSize}). ` +
+              `The last group will have ${groupSize + lastGroupSize} participants (${lastGroupSize} extra). ` +
+              "Proceeding to generate pairs with uneven groups.",
+            "info",
+          )
+        } else {
+          showAlert(
+            `The number of participants (${getCurrentEmails().length}) is not divisible by the group size (${groupSize}). ` +
+              `${lastGroupSize} participant${lastGroupSize > 1 ? "s" : ""} will sit out this round. ` +
+              "You can enable 'Allow Odd Groups' to include everyone, add more participants, or remove some.",
+            "warning",
+          )
+        }
       }
 
-      const pairs = createPairs(getCurrentEmails(), groupSize)
+      const pairs = createPairs(getCurrentEmails(), groupSize, true, allowOddGroups)
       setPreviousPairings(previousPairings) // sync pairing.js and state.js
       renderPairs(pairs)
       renderHistory()
@@ -251,7 +321,7 @@ if (typeof window !== "undefined") {
 
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-      new bootstrap.Tooltip(tooltipTriggerEl)
+      new Tooltip(tooltipTriggerEl)
     })
 
     document.getElementById("clear-storage-btn").onclick = function () {
