@@ -2,7 +2,7 @@ import { shuffle, createPairKey, hasPreviousPairing } from "./helpers.js"
 
 const previousPairings = {}
 
-const email = ["one@gmail.com", "two@gmail.com", "three@gmail.com", "four@gmail.com"]
+const email = []
 
 /**
  * Create unique groups for the current round, avoiding previous pairings.
@@ -77,12 +77,12 @@ function updatePreviousPairings(group, roundNumber) {
   }
 }
 
-const groupSize = 2
-console.log(createPairs(email, 1, groupSize))
-console.log(JSON.stringify(previousPairings, null, 2) + "\n")
-console.log(createPairs(email, 2, groupSize))
-console.log(JSON.stringify(previousPairings, null, 2) + "\n")
-console.log(createPairs(email, 3, groupSize))
-console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+// const groupSize = 2
+// console.log(createPairs(email, 1, groupSize))
+// console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+// console.log(createPairs(email, 2, groupSize))
+// console.log(JSON.stringify(previousPairings, null, 2) + "\n")
+// console.log(createPairs(email, 3, groupSize))
+// console.log(JSON.stringify(previousPairings, null, 2) + "\n")
 
 export { previousPairings, createPairs }

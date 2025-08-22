@@ -180,13 +180,31 @@ function getNextRoundNumber() {
   let maxRound = 0
 
   for (const participant in previousPairings) {
-    for (const partner in previousPairings[participant].hasPairedWith) {
-      const roundNumber = previousPairings[participant].hasPairedWith[partner].round
-      maxRound = Math.max(maxRound, roundNumber)
-    }
+    const participantHistory = previousPairings[participant].hasPairedWith
+    maxRound = Math.max(maxRound, getMaxRoundFromHistory(participantHistory))
   }
 
   return maxRound + 1
+}
+
+/**
+ * Helper to find the maximum round number in a participant's pairing history.
+ * @param {Object} history - The hasPairedWith object for a participant
+ * @returns {number} The highest round number found, or 0 if none
+ */
+function getMaxRoundFromHistory(history) {
+  let max = 0
+  for (const partner in history) {
+    const rounds = history[partner]
+    if (Array.isArray(rounds)) {
+      for (const record of rounds) {
+        if (typeof record.round === "number" && record.round > max) {
+          max = record.round
+        }
+      }
+    }
+  }
+  return max
 }
 
 /**
@@ -223,22 +241,26 @@ function updateHistory(groups, roundNumber) {
  */
 function updateGroupHistory(group, time, roundNumber) {
   const gKey = groupKey(group)
-  for (let i = 0; i < group.length; i++) {
-    const participantA = group[i]
+  console.log(`group before processing: ${group.join(", ")}`)
+  for (const participantA of group) {
     if (!previousPairings[participantA]) {
       previousPairings[participantA] = { pairKeys: [], hasPairedWith: {} }
     }
     if (!previousPairings[participantA].pairKeys.includes(gKey)) {
       previousPairings[participantA].pairKeys.push(gKey)
     }
-    for (let j = 0; j < group.length; j++) {
-      if (i === j) continue
-      const participantB = group[j]
-      previousPairings[participantA].hasPairedWith[participantB] = {
+    for (const participantB of group) {
+      if (participantA === participantB) continue
+      if (!previousPairings[participantA].hasPairedWith[participantB]) {
+        previousPairings[participantA].hasPairedWith[participantB] = []
+      }
+      previousPairings[participantA].hasPairedWith[participantB].push({
         date: time,
         round: roundNumber,
-      }
+      })
     }
+
+    console.log(`used email is ${participantA}, group is ${group.join(",")}, round is ${roundNumber}`)
   }
 }
 
@@ -297,7 +319,7 @@ const emails5 = ["a@x", "b@x", "c@x", "d@x", "e@x"]
 
 for (let i = 1; i <= emails5.length - 1; i++) {
   console.log(`\nRound ${i}:`)
-  const groups = createPairs(emails5, 2, true)
+  const groups = createPairs(emails5, 2, true, true)
   console.log("Groups:", groups)
   console.log("Current round:", getCurrentRoundNumber())
 }
