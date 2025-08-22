@@ -265,21 +265,6 @@ Best regards,`
 
     document.getElementById("export-pairs-btn").onclick = exportCurrentPairs
 
-    document.getElementById("regenerate-btn").onclick = function () {
-      const groupSizeInput = document.getElementById("group-size")
-      const groupSize = parseInt(groupSizeInput.value, 10)
-      const allowOddGroups = document.getElementById("allow-odd-groups").checked
-
-      if (getCurrentEmails().length >= groupSize) {
-        // Regenerate without incrementing round number
-        const pairs = createPairs(getCurrentEmails(), groupSize, true, allowOddGroups)
-        setPreviousPairings(previousPairings)
-        renderPairs(pairs)
-        renderHistory()
-        updateHistoryBadge()
-        saveState()
-      }
-    }
     document.getElementById("pair-btn").onclick = function () {
       const groupSizeInput = document.getElementById("group-size")
       const groupSize = parseInt(groupSizeInput.value, 10)
@@ -336,3 +321,4 @@ Best regards,`
     updateHistoryBadge()
   })
 }
+
