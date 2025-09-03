@@ -7,7 +7,7 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const isProduction = process.env.NODE_ENV === 'development'
+const isProduction = process.env.NODE_ENV === 'production'
 
 export default {
   mode: isProduction ? 'production' : 'development',
@@ -26,7 +26,8 @@ export default {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
+      inject: 'body'
     }),
     ...(isProduction
       ? [new MiniCssExtractPlugin({ filename: 'styles/[name].css' })]

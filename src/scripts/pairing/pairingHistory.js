@@ -62,7 +62,6 @@ function getCurrentRoundNumber() {
   return Math.max(0, getNextRoundNumber() - 1)
 }
 
-
 /**
  * Helper to find the maximum round number in a participant's pairing history.
  * @param {Object} history - The hasPairedWith object for a participant
@@ -129,4 +128,11 @@ function hasPreviousPairing(group) {
   return false
 }
 
-export { updateHistory, getCurrentRoundNumber, getNextRoundNumber, resetPairingHistory, hasPreviousPairing, previousPairings }
+export {
+  updateHistory,
+  getCurrentRoundNumber,
+  getNextRoundNumber,
+  resetPairingHistory,
+  hasPreviousPairing,
+  previousPairings,
+}

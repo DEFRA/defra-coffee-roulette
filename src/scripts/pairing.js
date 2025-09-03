@@ -2,8 +2,6 @@ import { shuffle, removeDuplicates } from "./pairing/pairingUtils.js"
 import { updateHistory, getNextRoundNumber, resetPairingHistory } from "./pairing/pairingHistory.js"
 import { generateNextRoundGroups } from "./pairing/pairingAlgorithms.js"
 
-
-
 /**
  * Creates groups for the next round based on existing pairing history.
  * Avoids repeating previous group compositions when possible.
@@ -46,8 +44,5 @@ function createPairs(emails, groupSize, shuffleList = true, allowOddGroup = true
 
   return groups
 }
-
-
-
 
 export { createPairs, resetPairingHistory }

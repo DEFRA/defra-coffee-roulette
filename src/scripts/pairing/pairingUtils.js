@@ -1,4 +1,3 @@
-
 function shuffle(emailList) {
   const clonedEmailList = [...emailList]
   let currentIndex = clonedEmailList.length

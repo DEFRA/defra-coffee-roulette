@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack serve",
     "build": "webpack",
-    "test:lint": "eslint src/ test/",
+    "lint:test": "eslint src/ test/",
     "lint:fix": "eslint src/ test/ --fix",
     "lint:html": "htmlhint '**/*.html'",
     "format": "prettier --write \"src/**/*.{js,html,scss}\""

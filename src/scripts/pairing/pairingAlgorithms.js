@@ -1,4 +1,4 @@
-import { hasPreviousPairing} from './pairingHistory.js'
+import { hasPreviousPairing } from "./pairingHistory.js"
 /**
  * Generates groups for the next round, delegating to the appropriate function based on group size.
  *
@@ -56,7 +56,7 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
     for (let i = 0; i < remaining.length - 1; i += 2) {
       pairs.push([remaining[i], remaining[i + 1]])
     }
-    
+
     // Handle the last remaining participant if odd number
     if (remaining.length % 2 === 1 && pairs.length > 0) {
       pairs[pairs.length - 1].push(remaining[remaining.length - 1])
@@ -97,7 +97,7 @@ function generateGroupsAvoidingRepeats(participants, groupSize, allowOddGroup) {
 
   while (remaining.length >= groupSize) {
     const group = remaining.splice(0, groupSize)
-    
+
     // Check if this specific group has been used before
     if (!hasPreviousPairing(group)) {
       groups.push(group)
@@ -137,9 +137,9 @@ function findBestPartner(participant, availableParticipants, used) {
       return potentialPartner
     }
   }
-  
+
   // If no new partners available, return null to let second pass handle duplicates
   return null
 }
 
-export { generateNextRoundGroups  }
+export { generateNextRoundGroups }
