@@ -322,9 +322,11 @@ Best regards,`
     const saveEmailTemplateBtn = document.getElementById("save-email-template-btn")
     const resetToDefaultBtn = document.getElementById("reset-to-default-btn")
     const templateStatus = document.getElementById("template-status")
+    let emailTemplateModalInstance = null
 
-    // Load template when modal opens
+    // Always initialize the modal instance for programmatic control
     if (emailTemplateModal) {
+      emailTemplateModalInstance = bootstrap.Modal.getOrCreateInstance(emailTemplateModal)
       emailTemplateModal.addEventListener("show.bs.modal", function () {
         if (emailTemplateEditor) {
           emailTemplateEditor.value = loadEmailTemplate()
@@ -357,14 +359,17 @@ Best regards,`
           saveTeamName(teamName)
           updateTemplateStatus()
 
-          // Close modal
-          const modal = bootstrap.Modal.getInstance(emailTemplateModal)
-          if (modal) {
-            modal.hide()
+          // Always get the modal instance right before hiding
+          if (emailTemplateModal) {
+            bootstrap.Modal.getOrCreateInstance(emailTemplateModal).hide();
+            // Force-remove the modal backdrop after a short delay
+            setTimeout(function() {
+              document.querySelectorAll('.modal-backdrop').forEach(function(el) {
+                el.remove();
+              });
+              document.body.classList.remove('modal-open');
+            }, 300);
           }
-
-          // Show success message
-          showAlert("Email template saved successfully!", "success")
         }
       }
     }
