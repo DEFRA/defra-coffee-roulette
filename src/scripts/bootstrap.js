@@ -99,6 +99,9 @@ Best regards,`
         saveState()
         renderEmailList()
         updateParticipantCount()
+        
+        // Hide all tooltips when remove button is clicked
+        hideAllTooltips()
       }
 
       li.appendChild(emailSpan)
@@ -282,6 +285,29 @@ Best regards,`
     </div>`
   }
 
+  // Helper function to hide all tooltips
+  function hideAllTooltips() {
+    // Hide all Bootstrap tooltip instances
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(element) {
+      const tooltip = bootstrap.Tooltip.getInstance(element)
+      if (tooltip) {
+        tooltip.hide()
+      }
+    })
+    
+    // Also force remove any visible tooltip elements from DOM
+    document.querySelectorAll('.tooltip').forEach(function(tooltipEl) {
+      tooltipEl.remove()
+    })
+  }
+
+  // Global click handler to hide tooltips on any button click
+  document.addEventListener('click', function(event) {
+    if (event.target.tagName === 'BUTTON') {
+      setTimeout(hideAllTooltips, 0)
+    }
+  })
+
   document.getElementById("add-bulk-emails-btn").onclick = function () {
     const textarea = document.getElementById("bulk-emails")
     const raw = textarea.value
@@ -300,6 +326,9 @@ Best regards,`
     updateParticipantCount()
 
     textarea.value = ""
+    
+    hideAllTooltips()
+    this.blur()
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -313,6 +342,9 @@ Best regards,`
         updateParticipantCount()
         input.value = ""
       }
+      
+      hideAllTooltips()
+      this.blur()
     }
 
     // Email template modal handlers
@@ -368,6 +400,9 @@ Best regards,`
                 el.remove();
               });
               document.body.classList.remove('modal-open');
+              // Ensure body scrolling is restored
+              document.body.style.overflow = '';
+              document.body.style.paddingRight = '';
             }, 300);
           }
         }
