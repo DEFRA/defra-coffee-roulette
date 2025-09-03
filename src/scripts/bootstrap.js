@@ -3,7 +3,7 @@ import * as bootstrap from "bootstrap"
 import Alert from "bootstrap/js/dist/alert"
 import { Tooltip, Toast, Popover } from "bootstrap"
 import { createPairs } from "./pairing.js"
-import {resetPairingHistory, previousPairings } from "./pairing/pairingHistory.js"
+import { resetPairingHistory, previousPairings } from "./pairing/pairingHistory.js"
 import {
   saveState,
   loadState,
@@ -19,7 +19,7 @@ import {
 
 if (typeof window !== "undefined") {
   loadState()
-  
+
   const currentDate = new Date()
   const monthName = currentDate.toLocaleString("default", { month: "long" })
   const year = currentDate.getFullYear()
@@ -430,8 +430,9 @@ Best regards,`
         } else {
           // Check if too many people would sit out (more than reasonable)
           const sitOutPercentage = (participantsWhoWillSitOut / totalParticipants) * 100
-          
-          if (sitOutPercentage > 25) { // If more than 25% would sit out
+
+          if (sitOutPercentage > 25) {
+            // If more than 25% would sit out
             const participantsNeeded = groupSize - remainder
             showAlert(
               `Warning: ${participantsWhoWillSitOut} participant${participantsWhoWillSitOut > 1 ? "s" : ""} (${Math.round(sitOutPercentage)}%) would sit out this round. ` +
@@ -476,4 +477,3 @@ Best regards,`
     updateHistoryBadge()
   })
 }
-

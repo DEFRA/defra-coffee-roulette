@@ -40,8 +40,8 @@
                   rows="3"
                   placeholder="Paste emails, separated by commas, semicolons, or new lines"
                 ></textarea>
-                <button 
-                  id="add-bulk-emails-btn" 
+                <button
+                  id="add-bulk-emails-btn"
                   class="btn btn-secondary btn-sm mt-2"
                   data-bs-toggle="tooltip"
                   title="Add multiple email addresses at once by pasting them into the text area above. Supports comma, semicolon, or line-separated lists."
@@ -53,8 +53,8 @@
               <!-- Single Email Input -->
               <div class="input-group">
                 <input type="email" id="new-email" class="form-control" placeholder="Add email" />
-                <button 
-                  id="add-email-btn" 
+                <button
+                  id="add-email-btn"
                   class="btn btn-secondary"
                   data-bs-toggle="tooltip"
                   title="Add a single email address to the participants list. Use this for adding one person at a time."
@@ -119,10 +119,18 @@
           <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Pairs This Round</h5>
             <div>
-              <button class="btn btn-outline-primary btn-sm me-2" data-bs-toggle="modal" data-bs-target="#emailTemplateModal">
+              <button
+                class="btn btn-outline-primary btn-sm me-2"
+                data-bs-toggle="modal"
+                data-bs-target="#emailTemplateModal"
+              >
                 ✏️ Edit Template
               </button>
-              <button id="export-pairs-btn" class="btn btn-outline-secondary btn-sm" title="Email pairs to participants">
+              <button
+                id="export-pairs-btn"
+                class="btn btn-outline-secondary btn-sm"
+                title="Email pairs to participants"
+              >
                 📧 Email
               </button>
             </div>
@@ -156,8 +164,8 @@
 
         <!-- Footer Actions -->
         <div class="text-center mt-4">
-          <button 
-            id="clear-storage-btn" 
+          <button
+            id="clear-storage-btn"
             class="btn btn-outline-danger"
             data-bs-toggle="tooltip"
             title="Warning: This will permanently delete all participants, pairing history, and round data. This action cannot be undone."
@@ -169,7 +177,13 @@
     </div>
 
     <!-- Email Template Modal -->
-    <div class="modal fade" id="emailTemplateModal" tabindex="-1" aria-labelledby="emailTemplateModalLabel" aria-hidden="true">
+    <div
+      class="modal fade"
+      id="emailTemplateModal"
+      tabindex="-1"
+      aria-labelledby="emailTemplateModalLabel"
+      aria-hidden="true"
+    >
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
