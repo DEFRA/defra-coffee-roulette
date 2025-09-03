@@ -2,7 +2,8 @@ import "../scss/styles.scss"
 import * as bootstrap from "bootstrap"
 import Alert from "bootstrap/js/dist/alert"
 import { Tooltip, Toast, Popover } from "bootstrap"
-import { createPairs, resetPairingHistory, getCurrentRoundNumber, previousPairings } from "./pairing.js"
+import { createPairs } from "./pairing.js"
+import {resetPairingHistory, previousPairings } from "./pairing/pairingHistory.js"
 import {
   saveState,
   loadState,
@@ -93,6 +94,7 @@ if (typeof window !== "undefined") {
     return nameParts.join(" ")
   }
 
+  
   // Add export functionality
   function exportCurrentPairs() {
     const pairs = document.querySelectorAll("#pairs-list li")
@@ -122,7 +124,7 @@ if (typeof window !== "undefined") {
     const year = currentDate.getFullYear()
     const teamName = "DDTS Digital Team"
 
-    const emailBody = `Hi firstname,
+    const emailBody = `Hi everyone,
 
 Below in the table are all the matches for the ${monthName} round of the DDTS coffee roulette. Please take a look below to find your name and your opposite match, then feel free to arrange a 30 minute virtual coffee break in the next few weeks.
 
