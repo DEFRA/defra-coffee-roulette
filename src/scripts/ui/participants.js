@@ -5,6 +5,12 @@ import { Tooltip } from "bootstrap"
 import { hideAllTooltips } from "./tooltips.js"
 import { updateParticipantCount } from "../utils/helpers.js"
 
+/**
+ * Renders the email list in the UI.
+ * @param {Function} getCurrentEmails - Function to retrieve the current list of emails.
+ * @param {Function} removeEmail - Function to remove an email from the list.
+ * @param {Function} saveState - Function to save the current state.
+ */
 function renderEmailList(getCurrentEmails, removeEmail, saveState) {
   const ul = document.getElementById("email-list")
   ul.innerHTML = ""

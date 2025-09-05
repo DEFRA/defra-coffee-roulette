@@ -30,33 +30,61 @@ Happy coffee chatting! ☕
 
 Best regards,`
 
+/**
+ * Loads the email template from local storage or returns the default template.
+ * @returns {string} The email template.
+ */
 function loadEmailTemplate() {
   const savedTemplate = localStorage.getItem("emailTemplate")
   return savedTemplate || defaultEmailTemplate
 }
 
+/**
+ * Saves the email template to local storage.
+ * @param {string} template - The email template to save.
+ */
 function saveEmailTemplate(template) {
   localStorage.setItem("emailTemplate", template)
 }
 
+/**
+ * Loads the team name from local storage or returns the default team name.
+ * @returns {string} The team name.
+ */
 function loadTeamName() {
   const savedTeamName = localStorage.getItem("teamName")
   return savedTeamName || defaultTeamName
 }
 
+/**
+ * Saves the team name to local storage.
+ * @param {string} teamName - The team name to save.
+ */
 function saveTeamName(teamName) {
   localStorage.setItem("teamName", teamName)
 }
 
+/**
+ * Checks if a custom email template is set in local storage.
+ * @returns {boolean} True if a custom template exists, false otherwise.
+ */
 function hasCustomTemplate() {
   return localStorage.getItem("emailTemplate") !== null
 }
 
+/**
+ * Resets the email template and team name to their default values.
+ */
 function resetToDefaultTemplate() {
   localStorage.removeItem("emailTemplate")
   localStorage.removeItem("teamName")
 }
 
+/**
+ * Extracts the name from an email address.
+ * @param {string} email - The email address.
+ * @returns {string} The extracted name.
+ */
 function extractNameFromEmail(email) {
   const namePart = email.split("@")[0]
 
@@ -67,6 +95,10 @@ function extractNameFromEmail(email) {
   return nameParts.join(" ")
 }
 
+/**
+ * Generates the pair text for the email body.
+ * @returns {string} The pair text.
+ */
 function getPairText() {
   const pairs = document.querySelectorAll("#pairs-list li")
   if (pairs.length === 0) return ""
@@ -80,6 +112,10 @@ function getPairText() {
     .join("\n")
 }
 
+/**
+ * Generates the email body content.
+ * @returns {string} The email body content.
+ */
 function generateEmailBody() {
   const template = loadEmailTemplate()
   const teamName = loadTeamName()

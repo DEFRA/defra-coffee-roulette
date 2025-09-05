@@ -14,6 +14,9 @@ import { renderHistory } from "../ui/history.js"
 import { renderPairs } from "../ui/pairs.js"
 import { processPairingData, parseCSVContent } from "./csvHelpers.js"
 
+/**
+ * Exports the current data to a CSV file.
+ */
 function exportData() {
   const emails = getCurrentEmails().join(", ")
   const groupSize = document.getElementById("group-size").value
@@ -51,6 +54,10 @@ function exportData() {
   URL.revokeObjectURL(url)
 }
 
+/**
+ * Imports data from a CSV file and updates the application state.
+ * @param {Event} event - The file input change event.
+ */
 function importCSVData(event) {
   const file = event.target.files[0]
   if (!file) return

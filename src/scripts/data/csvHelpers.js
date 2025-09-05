@@ -3,11 +3,11 @@
  */
 
 /**
- * Process pairing data from CSV format into structured data
- * @param {string} email - The email of the participant
- * @param {string} pairedWith - The pairing data string
- * @param {Set} allPairKeys - Set to store all pair keys
- * @returns {Array} Array of pairing objects
+ * Processes pairing data from CSV format into structured data.
+ * @param {string} email - The email of the participant.
+ * @param {string} pairedWith - The pairing data string.
+ * @param {Set} allPairKeys - Set to store all pair keys.
+ * @returns {Array} Array of pairing objects.
  */
 function processPairingData(email, pairedWith, allPairKeys) {
   if (!email || !pairedWith) return []
@@ -39,9 +39,9 @@ function processPairingData(email, pairedWith, allPairKeys) {
 }
 
 /**
- * Parse CSV content with proper handling of quoted multiline fields
- * @param {string} content - The raw CSV content
- * @returns {Object} Parsed data object with emails, groupSize, pairsArray, and historyRows
+ * Parses CSV content with proper handling of quoted multiline fields.
+ * @param {string} content - The raw CSV content.
+ * @returns {Object} Parsed data object with emails, groupSize, pairsArray, and historyRows.
  */
 function parseCSVContent(content) {
   const lines = content.split("\n")

@@ -2,6 +2,10 @@
  * Utility helper functions
  */
 
+/**
+ * Updates the participant count displayed in the UI.
+ * @param {Function} getCurrentEmails - Function to retrieve the current list of emails.
+ */
 function updateParticipantCount(getCurrentEmails) {
   const count = getCurrentEmails().length
   const countElement = document.getElementById("participant-count")
@@ -10,6 +14,10 @@ function updateParticipantCount(getCurrentEmails) {
   }
 }
 
+/**
+ * Updates the history badge displayed in the UI.
+ * @param {Function} getPreviousPairings - Function to retrieve the previous pairings.
+ */
 function updateHistoryBadge(getPreviousPairings) {
   const previousPairings = getPreviousPairings()
   const rounds = new Set()
