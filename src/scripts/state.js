@@ -64,12 +64,12 @@ function loadState() {
 export {
   getCurrentEmails,
   setCurrentEmails,
+  addEmail,
+  removeEmail,
   getRoundNumber,
   setRoundNumber,
   getPreviousPairings,
   setPreviousPairings,
   saveState,
   loadState,
-  addEmail,
-  removeEmail,
 }

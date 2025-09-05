@@ -4,7 +4,7 @@
 
 const defaultTeamName = "DDTS Digital Team"
 
-export const defaultEmailTemplate = `Hi everyone,
+const defaultEmailTemplate = `Hi everyone,
 
 Below in the table are all the matches for the \${monthName} round of the DDTS coffee roulette. Please take a look below to find your name and your opposite match, then feel free to arrange a 30 minute virtual coffee break in the next few weeks.
 
@@ -30,34 +30,34 @@ Happy coffee chatting! ☕
 
 Best regards,`
 
-export function loadEmailTemplate() {
+function loadEmailTemplate() {
   const savedTemplate = localStorage.getItem("emailTemplate")
   return savedTemplate || defaultEmailTemplate
 }
 
-export function saveEmailTemplate(template) {
+function saveEmailTemplate(template) {
   localStorage.setItem("emailTemplate", template)
 }
 
-export function loadTeamName() {
+function loadTeamName() {
   const savedTeamName = localStorage.getItem("teamName")
   return savedTeamName || defaultTeamName
 }
 
-export function saveTeamName(teamName) {
+function saveTeamName(teamName) {
   localStorage.setItem("teamName", teamName)
 }
 
-export function hasCustomTemplate() {
+function hasCustomTemplate() {
   return localStorage.getItem("emailTemplate") !== null
 }
 
-export function resetToDefaultTemplate() {
+function resetToDefaultTemplate() {
   localStorage.removeItem("emailTemplate")
   localStorage.removeItem("teamName")
 }
 
-export function extractNameFromEmail(email) {
+function extractNameFromEmail(email) {
   const namePart = email.split("@")[0]
 
   const nameParts = namePart.split(".").map(function (part) {
@@ -67,7 +67,7 @@ export function extractNameFromEmail(email) {
   return nameParts.join(" ")
 }
 
-export function getPairText() {
+function getPairText() {
   const pairs = document.querySelectorAll("#pairs-list li")
   if (pairs.length === 0) return ""
 
@@ -80,7 +80,7 @@ export function getPairText() {
     .join("\n")
 }
 
-export function generateEmailBody() {
+function generateEmailBody() {
   const template = loadEmailTemplate()
   const teamName = loadTeamName()
   const currentDate = new Date()
@@ -94,4 +94,17 @@ export function generateEmailBody() {
     year,
   }
   return template.replace(/\$\{(.*?)\}/g, (_, key) => placeholders[key] || "")
+}
+
+export {
+  defaultEmailTemplate,
+  loadEmailTemplate,
+  saveEmailTemplate,
+  loadTeamName,
+  saveTeamName,
+  hasCustomTemplate,
+  resetToDefaultTemplate,
+  extractNameFromEmail,
+  getPairText,
+  generateEmailBody,
 }
