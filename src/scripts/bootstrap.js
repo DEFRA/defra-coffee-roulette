@@ -1,8 +1,10 @@
+/**
+ * Bootstrap Coffee Roulette Application
+ */
 import "../scss/styles.scss"
 import * as bootstrap from "bootstrap"
 import Alert from "bootstrap/js/dist/alert"
 import { Tooltip, Toast, Popover } from "bootstrap"
-import { createPairs } from "./pairing.js"
 import { resetPairingHistory, previousPairings } from "./pairing/pairingHistory.js"
 import {
   saveState,
@@ -17,503 +19,43 @@ import {
   setPreviousPairings,
 } from "./state.js"
 
+// Import all modular components
+import { renderEmailList } from "./ui/emailList.js"
+import { renderPairs } from "./ui/pairs.js"
+import { renderHistory } from "./ui/history.js"
+import { setupEmailTemplateModal } from "./ui/modals.js"
+import { initializeTooltips, setupGlobalTooltipHandler } from "./ui/tooltips.js"
+import { setupEventHandlers } from "./events/handlers.js"
+import { updateParticipantCount, updateHistoryBadge } from "./utils/helpers.js"
+
 if (typeof window !== "undefined") {
   loadState()
 
-  const currentDate = new Date()
-  const monthName = currentDate.toLocaleString("default", { month: "long" })
-  const year = currentDate.getFullYear()
-  const defaultTeamName = "DDTS Digital Team"
-
-  const defaultEmailTemplate = `Hi everyone,
-
-Below in the table are all the matches for the \${monthName} round of the DDTS coffee roulette. Please take a look below to find your name and your opposite match, then feel free to arrange a 30 minute virtual coffee break in the next few weeks.
-
-If you require any further help or guidance or know someone who would like to join our coffee roulette, please do not hesitate to email the \${teamName}.
-
-How to find your match:
-
-You can search for your name within the email table, select the 'Find' tab with a spyglass icon from the tool bar or press F4, then insert your name in the 'Find what' box and click on 'Find Next'.
-
-We hope you really enjoy your coffee roulette and for those new this month, here are a few questions to get your conversation started, but feel free to choose your own topics too:
-
-• Tell me about your background and how did you get started in your career?
-• What do you do on a day to day basis?
-• What's the favourite part of your job?
-• What would you be doing if you weren't in your current job?
-• What do you spend your free time on?
-
-\${monthName} \${year} Coffee Roulette Matches:
-
-\${pairText}
-
-Happy coffee chatting! ☕
-
-Best regards,`
-
-  // Update participant count
-  function updateParticipantCount() {
-    const count = getCurrentEmails().length
-    const countElement = document.getElementById("participant-count")
-    if (countElement) {
-      countElement.textContent = `${count} participant${count !== 1 ? "s" : ""}`
-    }
-  }
-
-  // Update history badge
-  function updateHistoryBadge() {
-    const previousPairings = getPreviousPairings()
-    const rounds = new Set()
-
-    Object.values(previousPairings).forEach((participant) => {
-      Object.values(participant.hasPairedWith).forEach((pairings) => {
-        pairings.forEach((pairing) => rounds.add(pairing.round))
-      })
-    })
-
-    const badge = document.getElementById("history-badge")
-    if (badge) {
-      badge.textContent = `${rounds.size} round${rounds.size !== 1 ? "s" : ""}`
-    }
-  }
-
-  function renderEmailList() {
-    const ul = document.getElementById("email-list")
-    ul.innerHTML = ""
-
-    getCurrentEmails().forEach(function (email) {
-      const li = document.createElement("li")
-      li.className = "list-group-item d-flex justify-content-between align-items-center"
-
-      const emailSpan = document.createElement("span")
-      emailSpan.textContent = email // Full email on hover
-      emailSpan.className = "text-break"
-
-      const removeBtn = document.createElement("button")
-      removeBtn.className = "btn btn-sm btn-outline-danger"
-      removeBtn.innerHTML = "✕"
-      removeBtn.title = "Remove this participant from the list"
-      removeBtn.setAttribute("data-bs-toggle", "tooltip")
-      removeBtn.onclick = function () {
-        removeEmail(email)
-        saveState()
-        renderEmailList()
-        updateParticipantCount()
-        
-        // Hide all tooltips when remove button is clicked
-        hideAllTooltips()
-      }
-
-      li.appendChild(emailSpan)
-      li.appendChild(removeBtn)
-      ul.appendChild(li)
-    })
-
-    updateParticipantCount()
-
-    // Reinitialize tooltips for dynamically created elements
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-      new Tooltip(tooltipTriggerEl)
-    })
-  }
-
-  function extractNameFromEmail(email) {
-    const namePart = email.split("@")[0]
-
-    const nameParts = namePart.split(".").map(function (part) {
-      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
-    })
-
-    return nameParts.join(" ")
-  }
-
-  // Template management functions
-  function loadEmailTemplate() {
-    const savedTemplate = localStorage.getItem("emailTemplate")
-    return savedTemplate || defaultEmailTemplate
-  }
-
-  function saveEmailTemplate(template) {
-    localStorage.setItem("emailTemplate", template)
-  }
-
-  function loadTeamName() {
-    const savedTeamName = localStorage.getItem("teamName")
-    return savedTeamName || defaultTeamName
-  }
-
-  function saveTeamName(teamName) {
-    localStorage.setItem("teamName", teamName)
-  }
-
-  function hasCustomTemplate() {
-    return localStorage.getItem("emailTemplate") !== null
-  }
-
-  function resetToDefaultTemplate() {
-    localStorage.removeItem("emailTemplate")
-    localStorage.removeItem("teamName")
-  }
-
-  function getPairText() {
-    const pairs = document.querySelectorAll("#pairs-list li")
-    if (pairs.length === 0) return ""
-
-    return Array.from(pairs)
-      .map(function (li) {
-        const pairEmails = li.textContent.split(" & ")
-        const pairNames = pairEmails.map(extractNameFromEmail)
-        return pairNames.join(" and ")
-      })
-      .join("\n")
-  }
-
-  function generateEmailBody() {
-    const template = loadEmailTemplate()
-    const teamName = loadTeamName()
-    const placeholders = {
-      monthName,
-      teamName,
-      pairText: getPairText(),
-      year,
-    }
-    return template.replace(/\$\{(.*?)\}/g, (_, key) => placeholders[key] || "")
-  }
-
-  // Add export functionality
-  function exportCurrentPairs() {
-    const pairs = document.querySelectorAll("#pairs-list li")
-    if (pairs.length === 0) {
-      showAlert("No pairs to export. Generate pairs first.", "warning")
-      return
-    }
-
-    const emailBody = generateEmailBody()
-    const roundNumber = getRoundNumber()
-    const allEmails = []
-
-    pairs.forEach(function (li) {
-      const pairText = li.textContent
-      const emailsInPair = pairText.split(" & ")
-      allEmails.push(...emailsInPair)
-    })
-
-    const uniqueEmails = [...new Set(allEmails)]
-    const emailList = uniqueEmails.join(";")
-    const subject = `Coffee Roulette - Round ${roundNumber}`
-
-    window.open(
-      `mailto:?bcc=${encodeURIComponent(emailList)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
-    )
-  }
-
-  function renderPairs(pairs) {
-    const ul = document.getElementById("pairs-list")
-    if (!ul) return
-    ul.innerHTML = ""
-    pairs.forEach(function (pair) {
-      const li = document.createElement("li")
-      li.className = "list-group-item"
-      li.textContent = pair.join(" & ")
-      ul.appendChild(li)
-    })
-  }
-
-  function renderHistory() {
-    const container = document.getElementById("history")
-    if (!container) return
-
-    container.innerHTML = ""
-
-    const previousPairings = getPreviousPairings()
-
-    if (Object.keys(previousPairings).length === 0) {
-      container.innerHTML = "<p class='text-muted'>No pairing history yet. Generate some pairs to see the history!</p>"
-      return
-    }
-
-    // Create a summary for each participant
-    Object.keys(previousPairings).forEach(function (participantEmail) {
-      const participant = previousPairings[participantEmail]
-      const partners = Object.keys(participant.hasPairedWith)
-
-      if (partners.length > 0) {
-        const participantDiv = document.createElement("div")
-        participantDiv.className = "mb-3 p-3 border rounded bg-light"
-
-        const participantHeader = document.createElement("h6")
-        participantHeader.className = "mb-2 text-primary"
-        // Use formatted name instead of email
-        const participantName = extractNameFromEmail(participantEmail)
-        participantHeader.textContent = `${participantName} has paired with:`
-
-        const partnersList = document.createElement("div")
-        partnersList.className = "ms-3"
-
-        partners.forEach(function (partner, index) {
-          const pairings = participant.hasPairedWith[partner]
-          const rounds = pairings.map((p) => `Round ${p.round}`).join(", ")
-
-          const partnerSpan = document.createElement("span")
-          partnerSpan.className = "me-3 mb-1 d-inline-block"
-          partnerSpan.innerHTML = `<i class="bi bi-person-fill me-1"></i><strong>${partner}</strong> <small class="text-muted">(${rounds})</small>`
-
-          partnersList.appendChild(partnerSpan)
-
-          // Add comma separator except for last item
-          if (index < partners.length - 1) {
-            const separator = document.createElement("span")
-            separator.textContent = ", "
-            separator.className = "me-2"
-            partnersList.appendChild(separator)
-          }
-        })
-
-        participantDiv.appendChild(participantHeader)
-        participantDiv.appendChild(partnersList)
-        container.appendChild(participantDiv)
-      }
-    })
-  }
-
-  function showAlert(message, type = "danger") {
-    const container = document.getElementById("alert-container")
-    container.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
-    ${message}
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>`
-  }
-
-  // Helper function to hide all tooltips
-  function hideAllTooltips() {
-    // Hide all Bootstrap tooltip instances
-    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(element) {
-      const tooltip = bootstrap.Tooltip.getInstance(element)
-      if (tooltip) {
-        tooltip.hide()
-      }
-    })
-    
-    // Also force remove any visible tooltip elements from DOM
-    document.querySelectorAll('.tooltip').forEach(function(tooltipEl) {
-      tooltipEl.remove()
-    })
-  }
-
-  // Global click handler to hide tooltips on any button click
-  document.addEventListener('click', function(event) {
-    if (event.target.tagName === 'BUTTON') {
-      setTimeout(hideAllTooltips, 0)
-    }
-  })
-
-  document.getElementById("add-bulk-emails-btn").onclick = function () {
-    const textarea = document.getElementById("bulk-emails")
-    const raw = textarea.value
-    // clean input
-    const emails = raw
-      .split(/[\s,;]+/)
-      .map(function (email) {
-        return email.trim()
-      })
-      .filter(function (email) {
-        return email.length > 0 && !getCurrentEmails().includes(email)
-      })
-    setCurrentEmails(getCurrentEmails().concat(emails))
-    saveState()
-    renderEmailList()
-    updateParticipantCount()
-
-    textarea.value = ""
-    
-    hideAllTooltips()
-    this.blur()
-  }
+  setupGlobalTooltipHandler()
 
   document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("add-email-btn").onclick = function () {
-      const input = document.getElementById("new-email")
-      const newEmail = input.value.trim()
-      if (newEmail && !getCurrentEmails().includes(newEmail)) {
-        addEmail(newEmail)
-        saveState()
-        renderEmailList()
-        updateParticipantCount()
-        input.value = ""
-      }
-      
-      hideAllTooltips()
-      this.blur()
+    // Create state object to pass to event handlers
+    const state = {
+      getCurrentEmails,
+      setCurrentEmails,
+      addEmail,
+      removeEmail,
+      saveState,
+      getRoundNumber,
+      setRoundNumber,
+      getPreviousPairings,
+      setPreviousPairings
     }
 
-    // Email template modal handlers
-    const emailTemplateModal = document.getElementById("emailTemplateModal")
-    const emailTemplateEditor = document.getElementById("email-template-editor")
-    const teamNameInput = document.getElementById("team-name-input")
-    const saveEmailTemplateBtn = document.getElementById("save-email-template-btn")
-    const resetToDefaultBtn = document.getElementById("reset-to-default-btn")
-    const templateStatus = document.getElementById("template-status")
-    let emailTemplateModalInstance = null
+    setupEventHandlers(state)
 
-    // Always initialize the modal instance for programmatic control
-    if (emailTemplateModal) {
-      emailTemplateModalInstance = bootstrap.Modal.getOrCreateInstance(emailTemplateModal)
-      emailTemplateModal.addEventListener("show.bs.modal", function () {
-        if (emailTemplateEditor) {
-          emailTemplateEditor.value = loadEmailTemplate()
-        }
-        if (teamNameInput) {
-          teamNameInput.value = loadTeamName()
-        }
-        updateTemplateStatus()
-      })
-    }
+    setupEmailTemplateModal()
 
-    // Save template when save button is clicked
-    if (saveEmailTemplateBtn) {
-      saveEmailTemplateBtn.onclick = function () {
-        if (emailTemplateEditor && teamNameInput) {
-          const template = emailTemplateEditor.value.trim()
-          const teamName = teamNameInput.value.trim()
+    initializeTooltips()
 
-          if (template === "") {
-            showAlert("Template cannot be empty!", "warning")
-            return
-          }
-
-          if (teamName === "") {
-            showAlert("Team name cannot be empty!", "warning")
-            return
-          }
-
-          saveEmailTemplate(template)
-          saveTeamName(teamName)
-          updateTemplateStatus()
-
-          // Always get the modal instance right before hiding
-          if (emailTemplateModal) {
-            bootstrap.Modal.getOrCreateInstance(emailTemplateModal).hide();
-            // Force-remove the modal backdrop after a short delay
-            setTimeout(function() {
-              document.querySelectorAll('.modal-backdrop').forEach(function(el) {
-                el.remove();
-              });
-              document.body.classList.remove('modal-open');
-              // Ensure body scrolling is restored
-              document.body.style.overflow = '';
-              document.body.style.paddingRight = '';
-            }, 300);
-          }
-        }
-      }
-    }
-
-    // Reset to default template
-    if (resetToDefaultBtn) {
-      resetToDefaultBtn.onclick = function () {
-        if (
-          confirm("Are you sure you want to reset to the default template? This will overwrite your current changes.")
-        ) {
-          resetToDefaultTemplate()
-          emailTemplateEditor.value = defaultEmailTemplate
-          teamNameInput.value = defaultTeamName
-          updateTemplateStatus()
-          showAlert("Template reset to default!", "info")
-        }
-      }
-    }
-
-    function updateTemplateStatus() {
-      if (templateStatus) {
-        if (hasCustomTemplate()) {
-          templateStatus.innerHTML =
-            '<i class="bi bi-pencil-square text-warning"></i> <small class="text-muted">Using custom template</small>'
-          if (resetToDefaultBtn) {
-            resetToDefaultBtn.style.display = "inline-block"
-          }
-        } else {
-          templateStatus.innerHTML =
-            '<i class="bi bi-file-text text-primary"></i> <small class="text-muted">Using default template</small>'
-          if (resetToDefaultBtn) {
-            resetToDefaultBtn.style.display = "none"
-          }
-        }
-      }
-    }
-
-    document.getElementById("export-pairs-btn").onclick = exportCurrentPairs
-
-    document.getElementById("pair-btn").onclick = function () {
-      const groupSizeInput = document.getElementById("group-size")
-      const groupSize = parseInt(groupSizeInput.value, 10)
-      const allowOddGroups = document.getElementById("allow-odd-groups").checked
-
-      if (isNaN(groupSize) || groupSize < 2 || groupSize > getCurrentEmails().length) {
-        showAlert("Please enter a valid group size between 2 and " + getCurrentEmails().length + ".")
-        return
-      }
-
-      const totalParticipants = getCurrentEmails().length
-      const remainder = totalParticipants % groupSize
-      const maxPossibleGroups = Math.floor(totalParticipants / groupSize)
-      const participantsWhoWillSitOut = remainder
-
-      if (remainder !== 0) {
-        if (allowOddGroups) {
-          showAlert(
-            `The number of participants (${totalParticipants}) is not divisible by the group size (${groupSize}). ` +
-              `The last group will have ${groupSize + remainder} participants (${remainder} extra). ` +
-              "Proceeding to generate pairs with uneven groups.",
-            "info",
-          )
-        } else {
-          // Check if too many people would sit out (more than reasonable)
-          const sitOutPercentage = (participantsWhoWillSitOut / totalParticipants) * 100
-
-          if (sitOutPercentage > 25) {
-            // If more than 25% would sit out
-            const participantsNeeded = groupSize - remainder
-            showAlert(
-              `Warning: ${participantsWhoWillSitOut} participant${participantsWhoWillSitOut > 1 ? "s" : ""} (${Math.round(sitOutPercentage)}%) would sit out this round. ` +
-                `Consider adding ${participantsNeeded} more participant${participantsNeeded > 1 ? "s" : ""} to reach ${totalParticipants + participantsNeeded} total, ` +
-                `or enable 'Allow Odd Groups' to include everyone.`,
-              "warning",
-            )
-            return // Prevent pairing
-          } else {
-            showAlert(
-              `${participantsWhoWillSitOut} participant${participantsWhoWillSitOut > 1 ? "s" : ""} will sit out this round to avoid duplicate pairings. ` +
-                "You can enable 'Allow Odd Groups' to include everyone with some potential duplicate pairings.",
-              "warning",
-            )
-          }
-        }
-      }
-
-      const pairs = createPairs(getCurrentEmails(), groupSize, true, allowOddGroups)
-      setPreviousPairings(previousPairings) // sync pairing.js and state.js
-      renderPairs(pairs)
-      renderHistory()
-      updateHistoryBadge()
-      setRoundNumber(getRoundNumber() + 1)
-      saveState()
-    }
-
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-      new Tooltip(tooltipTriggerEl)
-    })
-
-    document.getElementById("clear-storage-btn").onclick = function () {
-      localStorage.removeItem("coffeeRouletteEmails")
-      localStorage.removeItem("coffeeRouletteRound")
-      localStorage.removeItem("coffeeRouletteHistory")
-      resetPairingHistory()
-      location.reload()
-    }
-    renderEmailList()
-    renderHistory()
-    updateHistoryBadge()
+    // Render initial UI
+    renderEmailList(getCurrentEmails, removeEmail, saveState)
+    renderHistory(getPreviousPairings)
+    updateHistoryBadge(getPreviousPairings)
   })
 }
