@@ -2,10 +2,6 @@
  * Bootstrap Coffee Roulette Application
  */
 import "../scss/styles.scss"
-import * as bootstrap from "bootstrap"
-import Alert from "bootstrap/js/dist/alert"
-import { Tooltip, Toast, Popover } from "bootstrap"
-import { resetPairingHistory, previousPairings } from "./pairing/pairingHistory.js"
 import {
   saveState,
   loadState,
@@ -21,12 +17,13 @@ import {
 
 // Import all modular components
 import { renderEmailList } from "./ui/emailList.js"
-import { renderPairs } from "./ui/pairs.js"
 import { renderHistory } from "./ui/history.js"
 import { setupEmailTemplateModal } from "./ui/modals.js"
 import { initializeTooltips, setupGlobalTooltipHandler } from "./ui/tooltips.js"
 import { setupEventHandlers } from "./events/handlers.js"
-import { updateParticipantCount, updateHistoryBadge } from "./utils/helpers.js"
+import { updateHistoryBadge } from "./utils/helpers.js"
+
+import { exportData, importCSVData } from "./data/exportCsv.js"
 
 if (typeof window !== "undefined") {
   loadState()
@@ -57,5 +54,9 @@ if (typeof window !== "undefined") {
     renderEmailList(getCurrentEmails, removeEmail, saveState)
     renderHistory(getPreviousPairings)
     updateHistoryBadge(getPreviousPairings)
+
+    //event listeners for export/import
+    document.getElementById("export-data-btn").onclick = exportData
+    document.getElementById("import-data-input").onchange = importCSVData
   })
 }

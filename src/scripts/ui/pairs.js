@@ -2,7 +2,7 @@
  * Pairs rendering
  */
 
-export function renderPairs(pairs) {
+function renderPairs(pairs) {
   const ul = document.getElementById("pairs-list")
   if (!ul) return
   ul.innerHTML = ""
@@ -13,3 +13,5 @@ export function renderPairs(pairs) {
     ul.appendChild(li)
   })
 }
+
+export { renderPairs }

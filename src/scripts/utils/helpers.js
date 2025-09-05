@@ -2,7 +2,7 @@
  * Utility helper functions
  */
 
-export function updateParticipantCount(getCurrentEmails) {
+function updateParticipantCount(getCurrentEmails) {
   const count = getCurrentEmails().length
   const countElement = document.getElementById("participant-count")
   if (countElement) {
@@ -10,7 +10,7 @@ export function updateParticipantCount(getCurrentEmails) {
   }
 }
 
-export function updateHistoryBadge(getPreviousPairings) {
+function updateHistoryBadge(getPreviousPairings) {
   const previousPairings = getPreviousPairings()
   const rounds = new Set()
 
@@ -25,3 +25,5 @@ export function updateHistoryBadge(getPreviousPairings) {
     badge.textContent = `${rounds.size} round${rounds.size !== 1 ? "s" : ""}`
   }
 }
+
+export { updateParticipantCount, updateHistoryBadge }

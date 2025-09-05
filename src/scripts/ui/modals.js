@@ -15,7 +15,7 @@ import { showAlert } from "./alerts.js"
 
 const defaultTeamName = "DDTS Digital Team"
 
-export function setupEmailTemplateModal() {
+function setupEmailTemplateModal() {
   const emailTemplateModal = document.getElementById("emailTemplateModal")
   const emailTemplateEditor = document.getElementById("email-template-editor")
   const teamNameInput = document.getElementById("team-name-input")
@@ -25,8 +25,6 @@ export function setupEmailTemplateModal() {
 
   // Always initialize the modal instance for programmatic control
   if (emailTemplateModal) {
-    const modalInstance = bootstrap.Modal.getOrCreateInstance(emailTemplateModal)
-
     emailTemplateModal.addEventListener("show.bs.modal", function () {
       if (emailTemplateEditor) {
         emailTemplateEditor.value = loadEmailTemplate()
@@ -112,3 +110,5 @@ export function setupEmailTemplateModal() {
     }
   }
 }
+
+export { setupEmailTemplateModal }

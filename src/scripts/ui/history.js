@@ -3,7 +3,7 @@
  */
 import { extractNameFromEmail } from "../email/template.js"
 
-export function renderHistory(getPreviousPairings) {
+function renderHistory(getPreviousPairings) {
   const container = document.getElementById("history")
   if (!container) return
 
@@ -59,3 +59,5 @@ export function renderHistory(getPreviousPairings) {
     }
   })
 }
+
+export { renderHistory }

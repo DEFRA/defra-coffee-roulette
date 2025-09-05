@@ -11,7 +11,7 @@ import { showAlert } from "../ui/alerts.js"
 import { resetPairingHistory, previousPairings } from "../pairing/pairingHistory.js"
 import { createPairs } from "../pairing.js"
 
-export function setupEventHandlers(state) {
+function setupEventHandlers(state) {
   const {
     getCurrentEmails,
     setCurrentEmails,
@@ -156,3 +156,5 @@ export function setupEventHandlers(state) {
     location.reload()
   }
 }
+
+export { setupEventHandlers }

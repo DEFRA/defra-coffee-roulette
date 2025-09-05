@@ -5,7 +5,7 @@ import { Tooltip } from "bootstrap"
 import { hideAllTooltips } from "./tooltips.js"
 import { updateParticipantCount } from "../utils/helpers.js"
 
-export function renderEmailList(getCurrentEmails, removeEmail, saveState) {
+function renderEmailList(getCurrentEmails, removeEmail, saveState) {
   const ul = document.getElementById("email-list")
   ul.innerHTML = ""
 
@@ -48,3 +48,5 @@ export function renderEmailList(getCurrentEmails, removeEmail, saveState) {
     tooltipTriggerEl._tooltip = tooltip
   })
 }
+
+export { renderEmailList }

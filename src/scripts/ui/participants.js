@@ -5,7 +5,7 @@ import { Tooltip } from "bootstrap"
 import { hideAllTooltips } from "./tooltips.js"
 import { updateParticipantCount } from "../utils/helpers.js"
 
-export function renderEmailList(getCurrentEmails, removeEmail, saveState) {
+function renderEmailList(getCurrentEmails, removeEmail, saveState) {
   const ul = document.getElementById("email-list")
   ul.innerHTML = ""
 
@@ -42,6 +42,9 @@ export function renderEmailList(getCurrentEmails, removeEmail, saveState) {
   // Reinitialize tooltips for dynamically created elements
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
   tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    // Instantiation is required to activate Bootstrap tooltips; reference is not needed
     new Tooltip(tooltipTriggerEl)
   })
 }
+
+export { renderEmailList }
