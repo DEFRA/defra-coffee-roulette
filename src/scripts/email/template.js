@@ -86,7 +86,7 @@ export function generateEmailBody() {
   const currentDate = new Date()
   const monthName = currentDate.toLocaleString("default", { month: "long" })
   const year = currentDate.getFullYear()
-  
+
   const placeholders = {
     monthName,
     teamName,

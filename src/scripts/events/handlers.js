@@ -21,7 +21,7 @@ export function setupEventHandlers(state) {
     getRoundNumber,
     setRoundNumber,
     getPreviousPairings,
-    setPreviousPairings
+    setPreviousPairings,
   } = state
 
   // Add email button handler
@@ -35,7 +35,7 @@ export function setupEventHandlers(state) {
       updateParticipantCount(getCurrentEmails)
       input.value = ""
     }
-    
+
     hideAllTooltips()
     this.blur()
   }
@@ -59,13 +59,13 @@ export function setupEventHandlers(state) {
     updateParticipantCount(getCurrentEmails)
 
     textarea.value = ""
-    
+
     hideAllTooltips()
     this.blur()
   }
 
   // Export pairs button handler
-  document.getElementById("export-pairs-btn").onclick = function() {
+  document.getElementById("export-pairs-btn").onclick = function () {
     exportCurrentPairs(getRoundNumber)
   }
 
@@ -82,7 +82,7 @@ export function setupEventHandlers(state) {
 
     const totalParticipants = getCurrentEmails().length
     const validationResult = validateGroupSize(totalParticipants, groupSize, allowOddGroups)
-    
+
     if (!validationResult.isValid) {
       if (validationResult.shouldBlock) {
         return // Prevent pairing
@@ -105,7 +105,7 @@ export function setupEventHandlers(state) {
   // Helper function to validate group size
   function validateGroupSize(totalParticipants, groupSize, allowOddGroups) {
     const remainder = totalParticipants % groupSize
-    
+
     if (remainder === 0) {
       return { isValid: true, shouldBlock: false }
     }
@@ -114,33 +114,36 @@ export function setupEventHandlers(state) {
       return {
         isValid: true,
         shouldBlock: false,
-        message: `The number of participants (${totalParticipants}) is not divisible by the group size (${groupSize}). ` +
+        message:
+          `The number of participants (${totalParticipants}) is not divisible by the group size (${groupSize}). ` +
           `The last group will have ${groupSize + remainder} participants (${remainder} extra). ` +
           "Proceeding to generate pairs with uneven groups.",
-        type: "info"
+        type: "info",
       }
     }
 
     const sitOutPercentage = (remainder / totalParticipants) * 100
-    
+
     if (sitOutPercentage > 25) {
       const participantsNeeded = groupSize - remainder
       return {
         isValid: false,
         shouldBlock: true,
-        message: `Warning: ${remainder} participant${remainder > 1 ? "s" : ""} (${Math.round(sitOutPercentage)}%) would sit out this round. ` +
+        message:
+          `Warning: ${remainder} participant${remainder > 1 ? "s" : ""} (${Math.round(sitOutPercentage)}%) would sit out this round. ` +
           `Consider adding ${participantsNeeded} more participant${participantsNeeded > 1 ? "s" : ""} to reach ${totalParticipants + participantsNeeded} total, ` +
           `or enable 'Allow Odd Groups' to include everyone.`,
-        type: "warning"
+        type: "warning",
       }
     }
 
     return {
       isValid: true,
       shouldBlock: false,
-      message: `${remainder} participant${remainder > 1 ? "s" : ""} will sit out this round to avoid duplicate pairings. ` +
+      message:
+        `${remainder} participant${remainder > 1 ? "s" : ""} will sit out this round to avoid duplicate pairings. ` +
         "You can enable 'Allow Odd Groups' to include everyone with some potential duplicate pairings.",
-      type: "warning"
+      type: "warning",
     }
   }
 

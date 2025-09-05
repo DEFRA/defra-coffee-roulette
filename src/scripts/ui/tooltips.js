@@ -6,15 +6,15 @@ import { Tooltip } from "bootstrap"
 
 export function hideAllTooltips() {
   // Hide all Bootstrap tooltip instances
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(element) {
+  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (element) {
     const tooltip = bootstrap.Tooltip.getInstance(element)
     if (tooltip) {
       tooltip.hide()
     }
   })
-  
+
   // Also force remove any visible tooltip elements from DOM
-  document.querySelectorAll('.tooltip').forEach(function(tooltipEl) {
+  document.querySelectorAll(".tooltip").forEach(function (tooltipEl) {
     tooltipEl.remove()
   })
 }
@@ -31,8 +31,8 @@ export function initializeTooltips() {
 
 export function setupGlobalTooltipHandler() {
   // Global click handler to hide tooltips on any button click
-  document.addEventListener('click', function(event) {
-    if (event.target.tagName === 'BUTTON') {
+  document.addEventListener("click", function (event) {
+    if (event.target.tagName === "BUTTON") {
       setTimeout(hideAllTooltips, 0)
     }
   })

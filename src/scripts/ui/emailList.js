@@ -27,7 +27,7 @@ export function renderEmailList(getCurrentEmails, removeEmail, saveState) {
       saveState()
       renderEmailList(getCurrentEmails, removeEmail, saveState)
       updateParticipantCount(getCurrentEmails)
-      
+
       // Hide all tooltips when remove button is clicked
       hideAllTooltips()
     }

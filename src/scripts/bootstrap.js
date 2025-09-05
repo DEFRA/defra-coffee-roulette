@@ -44,7 +44,7 @@ if (typeof window !== "undefined") {
       getRoundNumber,
       setRoundNumber,
       getPreviousPairings,
-      setPreviousPairings
+      setPreviousPairings,
     }
 
     setupEventHandlers(state)

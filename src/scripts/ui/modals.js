@@ -2,7 +2,15 @@
  * Modal management functionality
  */
 import * as bootstrap from "bootstrap"
-import { loadEmailTemplate, loadTeamName, saveEmailTemplate, saveTeamName, hasCustomTemplate, resetToDefaultTemplate, defaultEmailTemplate } from "../email/template.js"
+import {
+  loadEmailTemplate,
+  loadTeamName,
+  saveEmailTemplate,
+  saveTeamName,
+  hasCustomTemplate,
+  resetToDefaultTemplate,
+  defaultEmailTemplate,
+} from "../email/template.js"
 import { showAlert } from "./alerts.js"
 
 const defaultTeamName = "DDTS Digital Team"
