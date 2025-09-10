@@ -20,14 +20,14 @@ npm install
 ```
 
 ### 3. Start the Development Server
-This will start a local server with hot-reloading. By default, it runs on [http://localhost:8080](http://localhost:8080).
+This will start a local server with hot-reloading. By default, it runs on [http://localhost:3000](http://localhost:3000).
 
 ```bash
 npm start
 ```
 
 ### 4. Open the App
-Visit [http://localhost:8080](http://localhost:8080) in your browser to interact with the Coffee Roulette app.
+Visit [http://localhost:3000](http://localhost:3000) in your browser to interact with the Coffee Roulette app.
 
 ---
 
