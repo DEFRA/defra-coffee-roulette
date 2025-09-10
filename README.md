@@ -1,5 +1,9 @@
 # Defra-Coffee-Roulette
 
+## Requirements
+- Node.js v18 or higher
+- npm v8 or higher
+
 ## Local Development Setup
 
 ### 1. Clone the Repository
