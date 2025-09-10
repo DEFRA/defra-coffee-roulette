@@ -101,15 +101,13 @@ function generateGroupsAvoidingRepeats(participants, groupSize, allowOddGroup) {
     // Check if this specific group has been used before
     if (!hasPreviousPairing(group)) {
       groups.push(group)
-    } else {
+    } else if (allowOddGroup){
       // If allowOddGroup is true, we might still use it
       // If false, we should avoid it
-      if (allowOddGroup) {
-        groups.push(group) // Allow duplicates when odd groups are permitted
-      } else {
-        // Don't use this group, participants will sit out
-        console.log(`Skipping group ${group.join(", ")} - already used in previous round`)
-      }
+      groups.push(group) // Allow duplicates when odd groups are permitted
+    } else {
+      // Don't use this group, participants will sit out
+      console.log(`Skipping group ${group.join(", ")} - already used in previous round`)
     }
   }
 
