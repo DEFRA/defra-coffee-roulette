@@ -101,7 +101,7 @@ function generateGroupsAvoidingRepeats(participants, groupSize, allowOddGroup) {
     // Check if this specific group has been used before
     if (!hasPreviousPairing(group)) {
       groups.push(group)
-    } else if (allowOddGroup){
+    } else if (allowOddGroup) {
       // If allowOddGroup is true, we might still use it
       // If false, we should avoid it
       groups.push(group) // Allow duplicates when odd groups are permitted
