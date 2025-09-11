@@ -22,6 +22,7 @@ function setupEventHandlers(state) {
     setRoundNumber,
     getPreviousPairings,
     setPreviousPairings,
+    setPairsThisRound,
   } = state
 
   // Add email button handler
@@ -95,6 +96,7 @@ function setupEventHandlers(state) {
 
     const pairs = createPairs(getCurrentEmails(), groupSize, true, allowOddGroups)
     setPreviousPairings(previousPairings) // sync pairing.js and state.js
+    setPairsThisRound(pairs)
     renderPairs(pairs)
     renderHistory(getPreviousPairings)
     updateHistoryBadge(getPreviousPairings)
@@ -152,7 +154,9 @@ function setupEventHandlers(state) {
     localStorage.removeItem("coffeeRouletteEmails")
     localStorage.removeItem("coffeeRouletteRound")
     localStorage.removeItem("coffeeRouletteHistory")
+    localStorage.removeItem("coffeeRouletteCurrentPairs")
     resetPairingHistory()
+    setPairsThisRound([])
     location.reload()
   }
 }

@@ -14,11 +14,14 @@ import {
   setCurrentEmails,
   getPreviousPairings,
   setPreviousPairings,
+  getPairsThisRound,
+  setPairsThisRound,
 } from "./state.js"
 
 // Import all modular components
 import { renderEmailList } from "./ui/emailList.js"
 import { renderHistory } from "./ui/history.js"
+import { renderPairs } from "./ui/pairs.js"
 import { setupEmailTemplateModal } from "./ui/modals.js"
 import { initializeTooltips, setupGlobalTooltipHandler } from "./ui/tooltips.js"
 import { setupEventHandlers } from "./events/handlers.js"
@@ -43,6 +46,8 @@ if (typeof window !== "undefined") {
       setRoundNumber,
       getPreviousPairings,
       setPreviousPairings,
+      getPairsThisRound,
+      setPairsThisRound,
     }
 
     setupEventHandlers(state)
@@ -54,6 +59,7 @@ if (typeof window !== "undefined") {
     // Render initial UI
     renderEmailList(getCurrentEmails, removeEmail, saveState)
     renderHistory(getPreviousPairings)
+    renderPairs(getPairsThisRound())
     updateHistoryBadge(getPreviousPairings)
 
     //event listeners for export/import
