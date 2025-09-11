@@ -4,11 +4,11 @@
 import { renderEmailList } from "../ui/emailList.js"
 import { renderPairs } from "../ui/pairs.js"
 import { renderHistory } from "../ui/history.js"
-import { exportCurrentPairs } from "../email/export.js"
+import { exportCurrentPairs } from "../email/send-email.js"
 import { updateParticipantCount, updateHistoryBadge } from "../utils/helpers.js"
 import { hideAllTooltips } from "../ui/tooltips.js"
 import { showAlert } from "../ui/alerts.js"
-import { resetPairingHistory, previousPairings } from "../pairing/pairingHistory.js"
+import { resetPairingHistory, previousPairings } from "../pairing/pairing-history.js"
 import { createPairs } from "../pairing.js"
 
 function setupEventHandlers(state) {

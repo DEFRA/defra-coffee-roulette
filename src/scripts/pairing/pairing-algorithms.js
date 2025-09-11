@@ -1,4 +1,4 @@
-import { hasPreviousPairing } from "./pairingHistory.js"
+import { hasPreviousPairing } from "./pairing-history.js"
 /**
  * Generates groups for the next round, delegating to the appropriate function based on group size.
  *
@@ -47,10 +47,15 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
     return !used.has(p)
   })
 
-  if (remaining.length === 1 && allowOddGroup && pairs.length > 0) {
+  if (!allowOddGroup){
+      // If allowOddGroup is false, remaining participants sit out to avoid duplicates
+    return pairs
+  }
+  // review if statements and add guard statements to reduce nesting
+  if (remaining.length === 1 && pairs.length > 0) {
     // Add to the last pair to make a group of 3
     pairs[pairs.length - 1].push(remaining[0])
-  } else if (remaining.length >= 2 && allowOddGroup) {
+  } else if (remaining.length >= 2) {
     // Only pair remaining participants if allowOddGroup is true
     // This allows some duplicates when necessary to include everyone
     for (let i = 0; i < remaining.length - 1; i += 2) {
@@ -61,11 +66,7 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
     if (remaining.length % 2 === 1 && pairs.length > 0) {
       pairs[pairs.length - 1].push(remaining[remaining.length - 1])
     }
-  }
-  // If allowOddGroup is false, remaining participants sit out to avoid duplicates
-
-  return pairs
-}
+  }}
 
 /**
  * Generates groups (size > 2) while avoiding previous group compositions when possible.

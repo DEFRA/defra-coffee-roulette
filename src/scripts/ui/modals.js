@@ -10,7 +10,7 @@ import {
   hasCustomTemplate,
   resetToDefaultTemplate,
   defaultEmailTemplate,
-} from "../email/template.js"
+} from "../email/email-templates.js"
 import { showAlert } from "./alerts.js"
 
 const defaultTeamName = "DDTS Digital Team"

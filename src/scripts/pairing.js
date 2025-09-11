@@ -1,6 +1,6 @@
-import { shuffle, removeDuplicates } from "./pairing/pairingUtils.js"
-import { updateHistory, getNextRoundNumber, resetPairingHistory } from "./pairing/pairingHistory.js"
-import { generateNextRoundGroups } from "./pairing/pairingAlgorithms.js"
+import { shuffle, removeDuplicates } from "./pairing/pairing-helpers.js"
+import { updateHistory, getNextRoundNumber, resetPairingHistory } from "./pairing/pairing-history.js"
+import { generateNextRoundGroups } from "./pairing/pairing-algorithms.js"
 
 /**
  * Creates groups for the next round based on existing pairing history.

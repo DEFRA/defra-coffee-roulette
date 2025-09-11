@@ -1,7 +1,7 @@
 /**
  * Email export functionality
  */
-import { generateEmailBody } from "./template.js"
+import { generateEmailBody } from "./email-templates.js"
 import { showAlert } from "../ui/alerts.js"
 
 export function exportCurrentPairs(getRoundNumber) {

@@ -6,13 +6,13 @@ import {
   setCurrentEmails,
   removeEmail,
 } from "../state.js"
-import { previousPairings } from "../pairing/pairingHistory.js"
+import { previousPairings } from "../pairing/pairing-history.js"
 import { updateHistoryBadge } from "../utils/helpers.js"
 import { showAlert } from "../ui/alerts.js"
 import { renderEmailList } from "../ui/emailList.js"
 import { renderHistory } from "../ui/history.js"
 import { renderPairs } from "../ui/pairs.js"
-import { processPairingData, parseCSVContent } from "./csvHelpers.js"
+import { processPairingData, parseCSVContent } from "./csv-helpers.js"
 
 /**
  * Exports the current data to a CSV file.

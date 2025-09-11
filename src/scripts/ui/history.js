@@ -1,7 +1,7 @@
 /**
  * History rendering functionality
  */
-import { extractNameFromEmail } from "../email/template.js"
+import { extractNameFromEmail } from "../email/email-templates.js"
 
 function renderHistory(getPreviousPairings) {
   const container = document.getElementById("history")

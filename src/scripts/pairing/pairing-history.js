@@ -1,4 +1,4 @@
-import { groupKey } from "./pairingUtils"
+import { groupKey } from "./pairing-helpers"
 /**
  * Global object that stores the history of all pairings.
  * @type {Object.<string, {pairKeys: string[], hasPairedWith: Object.<string, {date: string, round: number}>}>}
