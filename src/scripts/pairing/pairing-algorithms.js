@@ -47,8 +47,8 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
     return !used.has(p)
   })
 
-  if (!allowOddGroup){
-      // If allowOddGroup is false, remaining participants sit out to avoid duplicates
+  if (!allowOddGroup) {
+    // If allowOddGroup is false, remaining participants sit out to avoid duplicates
     return pairs
   }
   // review if statements and add guard statements to reduce nesting
@@ -66,7 +66,8 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
     if (remaining.length % 2 === 1 && pairs.length > 0) {
       pairs[pairs.length - 1].push(remaining[remaining.length - 1])
     }
-  }}
+  }
+}
 
 /**
  * Generates groups (size > 2) while avoiding previous group compositions when possible.

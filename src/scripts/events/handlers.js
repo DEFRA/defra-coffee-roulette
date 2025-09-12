@@ -26,24 +26,8 @@ function setupEventHandlers(state) {
   } = state
 
   // Add email button handler
-  document.getElementById("add-email-btn").onclick = function () {
-    const input = document.getElementById("new-email")
-    const newEmail = input.value.trim()
-    if (newEmail && !getCurrentEmails().includes(newEmail)) {
-      addEmail(newEmail)
-      saveState()
-      renderEmailList(getCurrentEmails, removeEmail, saveState)
-      updateParticipantCount(getCurrentEmails)
-      input.value = ""
-    }
-
-    hideAllTooltips()
-    this.blur()
-  }
-
-  // Add bulk emails button handler
-  document.getElementById("add-bulk-emails-btn").onclick = function () {
-    const textarea = document.getElementById("bulk-emails")
+  document.getElementById("add-emails-btn").onclick = function () {
+    const textarea = document.getElementById("email-input")
     const raw = textarea.value
     // clean input
     const emails = raw
