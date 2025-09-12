@@ -1,15 +1,15 @@
 import {
-  getCurrentEmails,
+  getParticipants,
   getPreviousPairings,
   saveState,
   setPreviousPairings,
-  setCurrentEmails,
-  removeEmail,
+  setParticipants,
+  removeParticipant,
 } from "../state.js"
 import { previousPairings } from "../pairing/pairing-history.js"
 import { updateHistoryBadge } from "../utils/helpers.js"
 import { showAlert } from "../ui/alerts.js"
-import { renderEmailList } from "../ui/emailList.js"
+import { renderParticipantList } from "../ui/participant-list.js"
 import { renderHistory } from "../ui/history.js"
 import { renderPairs } from "../ui/pairs.js"
 import { processPairingData, parseCSVContent } from "./csv-helpers.js"
@@ -18,7 +18,7 @@ import { processPairingData, parseCSVContent } from "./csv-helpers.js"
  * Exports the current data to a CSV file.
  */
 function exportData() {
-  const emails = getCurrentEmails().join(", ")
+  const emails = getParticipants().join(", ")
   const groupSize = document.getElementById("group-size").value
   const pairs = Array.from(document.querySelectorAll("#pairs-list li"))
     .map(function (li) {
@@ -102,7 +102,7 @@ function importCSVData(event) {
     })
 
     // Restore settings and data
-    setCurrentEmails(emails)
+    setParticipants(emails)
     document.getElementById("group-size").value = groupSize
 
     renderPairs(pairsArray)
@@ -119,7 +119,7 @@ function importCSVData(event) {
     // Save state and update UI
     saveState()
 
-    renderEmailList(getCurrentEmails, removeEmail, saveState)
+    renderParticipantList(getParticipants, removeParticipant, saveState)
     renderHistory(getPreviousPairings)
     updateHistoryBadge(getPreviousPairings)
 

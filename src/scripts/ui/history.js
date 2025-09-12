@@ -1,8 +1,34 @@
 /**
- * History rendering functionality
+ * History rendering functionality for the Coffee Roulette application.
+ * Handles the display of pairing history in a user-friendly format.
+ *
+ * @fileoverview This module provides functionality to render the pairing history
+ * showing which participants have been paired together and in which rounds.
  */
+
 import { extractNameFromEmail } from "../email/email-templates.js"
 
+/**
+ * Renders the pairing history in the UI, displaying which participants have been paired together.
+ * Shows a formatted view of each participant and their pairing history with round numbers.
+ *
+ * @param {Function} getPreviousPairings - Function that returns the previous pairings object
+ * @param {Object} getPreviousPairings.return - Object containing pairing history data
+ * @param {Object} getPreviousPairings.return.participantEmail - Participant's pairing data
+ * @param {Object} getPreviousPairings.return.participantEmail.hasPairedWith - Partners and round data
+ *
+ * @example
+ * // Render history with a getter function
+ * renderHistory(() => ({
+ *   'john@example.com': {
+ *     hasPairedWith: {
+ *       'jane@example.com': [{ round: 1 }]
+ *     }
+ *   }
+ * }));
+ *
+ * @returns {void}
+ */
 function renderHistory(getPreviousPairings) {
   const container = document.getElementById("history")
   if (!container) return

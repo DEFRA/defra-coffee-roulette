@@ -1,7 +1,13 @@
 /**
- * Event handlers for the application
+ * Event handlers for the Coffee Roulette application.
+ * Sets up all user interface event listeners and interactions.
+ *
+ * @fileoverview This module handles all user interactions including adding participants,
+ * generating pairs, exporting data, and managing application state through UI events.
+ * Uses dependency injection pattern for state management functions.
  */
-import { renderEmailList } from "../ui/emailList.js"
+
+import { renderParticipantList } from "../ui/participant-list.js"
 import { renderPairs } from "../ui/pairs.js"
 import { renderHistory } from "../ui/history.js"
 import { exportCurrentPairs } from "../email/send-email.js"
@@ -11,12 +17,37 @@ import { showAlert } from "../ui/alerts.js"
 import { resetPairingHistory, previousPairings } from "../pairing/pairing-history.js"
 import { createPairs } from "../pairing.js"
 
+/**
+ * Sets up all event handlers for the application UI.
+ * Binds click handlers to buttons and form submissions using the provided state functions.
+ * Uses dependency injection to access state management functions.
+ *
+ * @param {Object} state - Object containing state management functions
+ * @param {Function} state.getParticipants - Function to get current participants array
+ * @param {Function} state.setParticipants - Function to set participants array
+ * @param {Function} state.removeParticipant - Function to remove a participant
+ * @param {Function} state.saveState - Function to save state to localStorage
+ * @param {Function} state.getRoundNumber - Function to get current round number
+ * @param {Function} state.setRoundNumber - Function to set round number
+ * @param {Function} state.getPreviousPairings - Function to get pairing history
+ * @param {Function} state.setPreviousPairings - Function to set pairing history
+ * @param {Function} state.setPairsThisRound - Function to set current round pairs
+ *
+ * @example
+ * // Setup event handlers with state object
+ * setupEventHandlers({
+ *   getParticipants: () => ['john@example.com'],
+ *   setParticipants: (emails) => console.log('Setting:', emails),
+ *   // ... other state functions
+ * });
+ *
+ * @returns {void}
+ */
 function setupEventHandlers(state) {
   const {
-    getCurrentEmails,
-    setCurrentEmails,
-    addEmail,
-    removeEmail,
+    getParticipants,
+    setParticipants,
+    removeParticipant,
     saveState,
     getRoundNumber,
     setRoundNumber,
@@ -36,12 +67,12 @@ function setupEventHandlers(state) {
         return email.trim()
       })
       .filter(function (email) {
-        return email.length > 0 && !getCurrentEmails().includes(email)
+        return email.length > 0 && !getParticipants().includes(email)
       })
-    setCurrentEmails(getCurrentEmails().concat(emails))
+    setParticipants(getParticipants().concat(emails))
     saveState()
-    renderEmailList(getCurrentEmails, removeEmail, saveState)
-    updateParticipantCount(getCurrentEmails)
+    renderParticipantList(getParticipants, removeParticipant, saveState)
+    updateParticipantCount(getParticipants)
 
     textarea.value = ""
 
@@ -60,12 +91,12 @@ function setupEventHandlers(state) {
     const groupSize = parseInt(groupSizeInput.value, 10)
     const allowOddGroups = document.getElementById("allow-odd-groups").checked
 
-    if (isNaN(groupSize) || groupSize < 2 || groupSize > getCurrentEmails().length) {
-      showAlert("Please enter a valid group size between 2 and " + getCurrentEmails().length + ".")
+    if (isNaN(groupSize) || groupSize < 2 || groupSize > getParticipants().length) {
+      showAlert("Please enter a valid group size between 2 and " + getParticipants().length + ".")
       return
     }
 
-    const totalParticipants = getCurrentEmails().length
+    const totalParticipants = getParticipants().length
     const validationResult = validateGroupSize(totalParticipants, groupSize, allowOddGroups)
 
     if (!validationResult.isValid) {
@@ -78,7 +109,7 @@ function setupEventHandlers(state) {
       showAlert(validationResult.message, validationResult.type)
     }
 
-    const pairs = createPairs(getCurrentEmails(), groupSize, true, allowOddGroups)
+    const pairs = createPairs(getParticipants(), groupSize, true, allowOddGroups)
     setPreviousPairings(previousPairings) // sync pairing.js and state.js
     setPairsThisRound(pairs)
     renderPairs(pairs)
@@ -135,7 +166,8 @@ function setupEventHandlers(state) {
 
   // Clear storage button handler
   document.getElementById("clear-storage-btn").onclick = function () {
-    localStorage.removeItem("coffeeRouletteEmails")
+    localStorage.removeItem("coffeeRouletteParticipants")
+    localStorage.removeItem("coffeeRouletteEmails") // Legacy key support
     localStorage.removeItem("coffeeRouletteRound")
     localStorage.removeItem("coffeeRouletteHistory")
     localStorage.removeItem("coffeeRouletteCurrentPairs")
