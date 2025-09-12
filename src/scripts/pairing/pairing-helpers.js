@@ -1,6 +1,6 @@
-function shuffle(emailList) {
-  const clonedEmailList = [...emailList]
-  let currentIndex = clonedEmailList.length
+function shuffle(participantList) {
+  const clonedParticipantList = [...participantList]
+  let currentIndex = clonedParticipantList.length
   let randomIndex
 
   while (currentIndex !== 0) {
@@ -8,11 +8,11 @@ function shuffle(emailList) {
 
     // swapping index positions
     currentIndex--
-    const temp = clonedEmailList[currentIndex]
-    clonedEmailList[currentIndex] = clonedEmailList[randomIndex]
-    clonedEmailList[randomIndex] = temp
+    const temp = clonedParticipantList[currentIndex]
+    clonedParticipantList[currentIndex] = clonedParticipantList[randomIndex]
+    clonedParticipantList[randomIndex] = temp
   }
-  const shuffledList = clonedEmailList
+  const shuffledList = clonedParticipantList
   return shuffledList
 }
 
@@ -38,19 +38,19 @@ function groupKey(group) {
 /**
  * Removes duplicate emails from a list while preserving the order of first occurrence.
  *
- * @param {string[]} emailList - List of email addresses that may contain duplicates
+ * @param {string[]} participantList - List of email addresses that may contain duplicates
  * @returns {string[]} List with duplicates removed
  */
-function removeDuplicates(emailList) {
+function removeDuplicates(participantList) {
   const seen = new Set()
-  const uniqueEmails = []
-  for (const email of emailList) {
-    if (!seen.has(email)) {
-      seen.add(email)
-      uniqueEmails.push(email)
+  const uniqueParticipants = []
+  for (const participant of participantList) {
+    if (!seen.has(participant)) {
+      seen.add(participant)
+      uniqueParticipants.push(participant)
     }
   }
-  return uniqueEmails
+  return uniqueParticipants
 }
 
 export { shuffle, groupKey, removeDuplicates }

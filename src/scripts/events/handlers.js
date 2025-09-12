@@ -10,8 +10,8 @@
 import { renderParticipantList } from "../ui/participant-list.js"
 import { renderPairs } from "../ui/pairs.js"
 import { renderHistory } from "../ui/history.js"
-import { exportCurrentPairs } from "../email/send-email.js"
-import { updateParticipantCount, updateHistoryBadge } from "../utils/helpers.js"
+import { emailCoffeePairs } from "../email/send-email.js"
+import { updateParticipantCountDisplay, updateRoundsBadgeDisplay } from "../utils/helpers.js"
 import { hideAllTooltips } from "../ui/tooltips.js"
 import { showAlert } from "../ui/alerts.js"
 import { resetPairingHistory, previousPairings } from "../pairing/pairing-history.js"
@@ -57,7 +57,7 @@ function setupEventHandlers(state) {
   } = state
 
   // Add email button handler
-  document.getElementById("add-emails-btn").onclick = function () {
+  document.getElementById("add-participants-btn").onclick = function () {
     const textarea = document.getElementById("email-input")
     const raw = textarea.value
     // clean input
@@ -72,7 +72,7 @@ function setupEventHandlers(state) {
     setParticipants(getParticipants().concat(emails))
     saveState()
     renderParticipantList(getParticipants, removeParticipant, saveState)
-    updateParticipantCount(getParticipants)
+    updateParticipantCountDisplay(getParticipants)
 
     textarea.value = ""
 
@@ -81,8 +81,8 @@ function setupEventHandlers(state) {
   }
 
   // Export pairs button handler
-  document.getElementById("export-pairs-btn").onclick = function () {
-    exportCurrentPairs(getRoundNumber)
+  document.getElementById("email-coffee-pairs-btn").onclick = function () {
+    emailCoffeePairs(getRoundNumber)
   }
 
   // Generate pairs button handler
@@ -114,7 +114,7 @@ function setupEventHandlers(state) {
     setPairsThisRound(pairs)
     renderPairs(pairs)
     renderHistory(getPreviousPairings)
-    updateHistoryBadge(getPreviousPairings)
+    updateRoundsBadgeDisplay(getPreviousPairings)
     setRoundNumber(getRoundNumber() + 1)
     saveState()
   }

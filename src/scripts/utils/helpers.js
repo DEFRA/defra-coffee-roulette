@@ -26,7 +26,7 @@
  *
  * @returns {void}
  */
-function updateParticipantCount(getParticipants) {
+function updateParticipantCountDisplay(getParticipants) {
   const count = getParticipants().length
   const countElement = document.getElementById("participant-count")
   if (countElement) {
@@ -57,7 +57,7 @@ function updateParticipantCount(getParticipants) {
  *
  * @returns {void}
  */
-function updateHistoryBadge(getPreviousPairings) {
+function updateRoundsBadgeDisplay(getPreviousPairings) {
   const previousPairings = getPreviousPairings()
   const rounds = new Set()
 
@@ -73,4 +73,4 @@ function updateHistoryBadge(getPreviousPairings) {
   }
 }
 
-export { updateParticipantCount, updateHistoryBadge }
+export { updateParticipantCountDisplay, updateRoundsBadgeDisplay }

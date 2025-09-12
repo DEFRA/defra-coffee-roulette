@@ -27,7 +27,7 @@
  * @returns {void}
  */
 function renderPairs(pairs) {
-  const ul = document.getElementById("pairs-list")
+  const ul = document.getElementById("coffee-pairs-list")
   if (!ul) return
   ul.innerHTML = ""
   pairs.forEach(function (pair) {

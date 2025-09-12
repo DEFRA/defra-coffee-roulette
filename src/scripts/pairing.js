@@ -16,7 +16,7 @@ import { generateNextRoundGroups } from "./pairing/pairing-algorithms.js"
  * Avoids repeating previous group compositions when possible using intelligent
  * pairing algorithms that consider historical data.
  *
- * @param {string[]} emails - Array of participant email addresses
+ * @param {string[]} participants - Array of participant email addresses
  * @param {number} groupSize - Number of participants per group (minimum 2)
  * @param {boolean} [shuffleList=true] - Whether to shuffle the participant list before pairing
  * @param {boolean} [allowOddGroup=true] - Whether to allow one group with size groupSize+1 when odd number of participants
@@ -40,18 +40,18 @@ import { generateNextRoundGroups } from "./pairing/pairing-algorithms.js"
  * // Disable shuffling for deterministic results
  * const pairs = createPairs(['john@example.com', 'jane@example.com'], 2, false);
  */
-function createPairs(emails, groupSize, shuffleList = true, allowOddGroup = true) {
+function createPairs(participants, groupSize, shuffleList = true, allowOddGroup = true) {
   if (groupSize < 2) {
     throw new Error("groupSize must be greater than or equal to 2")
   }
-  if (emails.length === 0) {
+  if (participants.length === 0) {
     return []
   }
 
-  const uniqueEmails = removeDuplicates(emails)
-  const hasOddParticipant = uniqueEmails.length % groupSize !== 0
+  const uniqueParticipants = removeDuplicates(participants)
+  const hasOddParticipant = uniqueParticipants.length % groupSize !== 0
 
-  let participantList = shuffleList ? shuffle([...uniqueEmails]) : [...uniqueEmails]
+  let participantList = shuffleList ? shuffle([...uniqueParticipants]) : [...uniqueParticipants]
 
   // Handle odd number of participants for pair grouping
   if (hasOddParticipant && allowOddGroup === false) {

@@ -7,7 +7,7 @@ import {
   removeParticipant,
 } from "../state.js"
 import { previousPairings } from "../pairing/pairing-history.js"
-import { updateHistoryBadge } from "../utils/helpers.js"
+import { updateRoundsBadgeDisplay } from "../utils/helpers.js"
 import { showAlert } from "../ui/alerts.js"
 import { renderParticipantList } from "../ui/participant-list.js"
 import { renderHistory } from "../ui/history.js"
@@ -20,7 +20,7 @@ import { processPairingData, parseCSVContent } from "./csv-helpers.js"
 function exportData() {
   const emails = getParticipants().join(", ")
   const groupSize = document.getElementById("group-size").value
-  const pairs = Array.from(document.querySelectorAll("#pairs-list li"))
+  const pairs = Array.from(document.querySelectorAll("#coffee-pairs-list li"))
     .map(function (li) {
       return li.textContent
     })
@@ -121,7 +121,7 @@ function importCSVData(event) {
 
     renderParticipantList(getParticipants, removeParticipant, saveState)
     renderHistory(getPreviousPairings)
-    updateHistoryBadge(getPreviousPairings)
+    updateRoundsBadgeDisplay(getPreviousPairings)
 
     showAlert("Data imported successfully!", "success")
   }

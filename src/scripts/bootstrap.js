@@ -31,7 +31,7 @@ import { renderPairs } from "./ui/pairs.js"
 import { setupEmailTemplateModal } from "./ui/modals.js"
 import { initializeTooltips, setupGlobalTooltipHandler } from "./ui/tooltips.js"
 import { setupEventHandlers } from "./events/handlers.js"
-import { updateHistoryBadge } from "./utils/helpers.js"
+import { updateRoundsBadgeDisplay } from "./utils/helpers.js"
 
 import { exportData, importCSVData } from "./data/export-csv.js"
 
@@ -66,7 +66,7 @@ if (typeof window !== "undefined") {
     renderParticipantList(getParticipants, removeParticipant, saveState)
     renderHistory(getPreviousPairings)
     renderPairs(getPairsThisRound()) // Render saved current pairs
-    updateHistoryBadge(getPreviousPairings)
+    updateRoundsBadgeDisplay(getPreviousPairings)
 
     //event listeners for export/import
     document.getElementById("export-data-btn").onclick = exportData

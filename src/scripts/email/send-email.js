@@ -4,8 +4,8 @@
 import { generateEmailBody } from "./email-templates.js"
 import { showAlert } from "../ui/alerts.js"
 
-export function exportCurrentPairs(getRoundNumber) {
-  const pairs = document.querySelectorAll("#pairs-list li")
+ function emailCoffeePairs(getRoundNumber) {
+  const pairs = document.querySelectorAll("#coffee-pairs-list li")
   if (pairs.length === 0) {
     showAlert("No pairs to export. Generate pairs first.", "warning")
     return
@@ -29,3 +29,5 @@ export function exportCurrentPairs(getRoundNumber) {
     `mailto:?bcc=${encodeURIComponent(emailList)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`,
   )
 }
+
+export { emailCoffeePairs }

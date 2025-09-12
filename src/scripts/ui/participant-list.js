@@ -9,7 +9,7 @@
 
 import { Tooltip } from "bootstrap"
 import { hideAllTooltips } from "./tooltips.js"
-import { updateParticipantCount } from "../utils/helpers.js"
+import { updateParticipantCountDisplay } from "../utils/helpers.js"
 
 /**
  * Renders the participant list in the UI with interactive remove buttons.
@@ -33,7 +33,7 @@ import { updateParticipantCount } from "../utils/helpers.js"
  * @returns {void}
  */
 function renderParticipantList(getParticipants, removeParticipant, saveState) {
-  const ul = document.getElementById("email-list")
+  const ul = document.getElementById("participant-list")
   ul.innerHTML = ""
 
   getParticipants().forEach(function (email) {
@@ -53,7 +53,7 @@ function renderParticipantList(getParticipants, removeParticipant, saveState) {
       removeParticipant(email)
       saveState()
       renderParticipantList(getParticipants, removeParticipant, saveState)
-      updateParticipantCount(getParticipants)
+      updateParticipantCountDisplay(getParticipants)
 
       // Hide all tooltips when remove button is clicked
       hideAllTooltips()
@@ -64,7 +64,7 @@ function renderParticipantList(getParticipants, removeParticipant, saveState) {
     ul.appendChild(li)
   })
 
-  updateParticipantCount(getParticipants)
+  updateParticipantCountDisplay(getParticipants)
 
   // Reinitialize tooltips for dynamically created elements
   const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
