@@ -56,8 +56,6 @@ if (typeof window !== "undefined") {
       setPairsThisRound,
     }
 
-  
-
     setupEventHandlers(state)
 
     setupEmailTemplateModal()

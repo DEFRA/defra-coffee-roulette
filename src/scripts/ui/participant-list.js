@@ -43,7 +43,7 @@ function renderParticipantList(getParticipants, removeParticipant, saveState) {
     // Add the number before the email
     const numberSpan = document.createElement("span")
     numberSpan.className = "me-2 fw-bold text-secondary"
-    numberSpan.textContent = (idx + 1) + "."
+    numberSpan.textContent = idx + 1 + "."
 
     const emailSpan = document.createElement("span")
     emailSpan.textContent = email // Full email on hover
@@ -65,7 +65,7 @@ function renderParticipantList(getParticipants, removeParticipant, saveState) {
     }
 
     // Layout: number + email + remove button
-     const leftDiv = document.createElement("div")
+    const leftDiv = document.createElement("div")
     leftDiv.className = "d-flex align-items-center"
     leftDiv.appendChild(numberSpan)
     leftDiv.appendChild(emailSpan)
