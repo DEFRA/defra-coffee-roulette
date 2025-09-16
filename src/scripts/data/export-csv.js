@@ -1,3 +1,10 @@
+/**
+ * Data export and import functionality for the Coffee Roulette application.
+ * Handles CSV file generation and parsing for data persistence and backup.
+ *
+ * @fileoverview This module provides functionality to export current application
+ * state to CSV files and import previously exported data to restore state.
+ */
 import {
   getParticipants,
   getPreviousPairings,
@@ -15,7 +22,15 @@ import { renderPairs } from "../ui/pairs.js"
 import { processPairingData, parseCSVContent } from "./csv-helpers.js"
 
 /**
- * Exports the current data to a CSV file.
+ * Exports the current application data to a CSV file.
+ * Creates a downloadable CSV file containing participants, group size, current pairs, and pairing history.
+ *
+ * @example
+ * // Export current data
+ * exportData();
+ * // Automatically downloads "coffee_roulette_data.csv" file
+ *
+ * @returns {void}
  */
 function exportData() {
   const emails = getParticipants().join(", ")
@@ -56,7 +71,17 @@ function exportData() {
 
 /**
  * Imports data from a CSV file and updates the application state.
- * @param {Event} event - The file input change event.
+ * Parses CSV file containing participants, group size, pairs, and pairing history.
+ * Updates all application state and UI components with imported data.
+ *
+ * @param {Event} event - The file input change event containing the selected CSV file
+ * @param {FileList} event.target.files - List of selected files from the input
+ *
+ * @example
+ * // Use with file input element
+ * document.getElementById('file-input').addEventListener('change', importCSVData);
+ *
+ * @returns {void}
  */
 function importCSVData(event) {
   const file = event.target.files[0]

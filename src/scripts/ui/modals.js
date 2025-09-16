@@ -1,5 +1,9 @@
 /**
- * Modal management functionality
+ * Modal management functionality for the Coffee Roulette application.
+ * Handles the email template customization modal and its interactions.
+ *
+ * @fileoverview This module manages the Bootstrap modal for email template editing,
+ * including loading/saving templates, team name customization, and reset functionality.
  */
 import * as bootstrap from "bootstrap"
 import {
@@ -15,6 +19,16 @@ import { showAlert } from "./alerts.js"
 
 const defaultTeamName = "DDTS Digital Team"
 
+/**
+ * Sets up the email template modal with all event handlers and functionality.
+ * Initializes the Bootstrap modal, loads saved templates, and sets up save/reset buttons.
+ *
+ * @example
+ * // Initialize the email template modal
+ * setupEmailTemplateModal();
+ *
+ * @returns {void}
+ */
 function setupEmailTemplateModal() {
   const emailTemplateModal = document.getElementById("emailTemplateModal")
   const emailTemplateEditor = document.getElementById("email-template-editor")
@@ -104,6 +118,12 @@ function setupEmailTemplateModal() {
     }
   }
 
+  /**
+   * Updates the template status indicator to show whether default or custom template is being used.
+   * Also controls the visibility of the reset button based on template status.
+   *
+   * @returns {void}
+   */
   function updateTemplateStatus() {
     if (templateStatus) {
       if (hasCustomTemplate()) {

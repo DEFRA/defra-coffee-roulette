@@ -52,19 +52,36 @@ function parseCSVContent(content) {
 
   let currentSection = null
 
+  /**
+   * Parses email addresses from a CSV line.
+   * @param {string} line - The CSV line containing email data.
+   * @returns {string[]|null} Array of email addresses or null if no match.
+   */
   function parseEmails(line) {
     const emailsMatch = line.match(/^Emails,"(.+)"$/)
-    return emailsMatch
-      ? emailsMatch[1].split(", ").filter(function (email) {
+    if (!emailsMatch) return null
+    return emailsMatch[1].split(", ").filter(function (email) {
           return email.trim()
         })
-      : null
   }
 
+  /**
+   * Parses group size from a CSV line.
+   * @param {string} line - The CSV line containing group size data.
+   * @returns {string} The group size value or "2" as default.
+   */
   function parseGroupSize(line) {
     return line.split(",")[1]?.trim() || "2"
   }
 
+  /**
+   * Parses pairs data from CSV lines, handling both single-line and multi-line formats.
+   * @param {string[]} lines - Array of CSV lines.
+   * @param {number} startIdx - Starting index in the lines array.
+   * @returns {Object} Object containing pairsArray and nextIdx.
+   * @returns {string[][]} return.pairsArray - Array of parsed pairs.
+   * @returns {number} return.nextIdx - Next index to continue parsing from.
+   */
   function parsePairs(lines, startIdx) {
     let pairsArray = []
     let i = startIdx
@@ -111,6 +128,12 @@ function parseCSVContent(content) {
     return { pairsArray: [], nextIdx: i }
   }
 
+  /**
+   * Parses history rows from CSV lines.
+   * @param {string[]} lines - Array of CSV lines.
+   * @param {number} startIdx - Starting index in the lines array.
+   * @returns {string[]} Array of history row strings.
+   */
   function parseHistoryRows(lines, startIdx) {
     let historyRows = []
     let i = startIdx

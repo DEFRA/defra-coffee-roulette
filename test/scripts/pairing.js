@@ -1,7 +1,24 @@
+/**
+ * Test suite for the pairing functionality of the Coffee Roulette application.
+ * Provides manual testing functions to validate pairing algorithms and history tracking.
+ *
+ * @fileoverview This module contains test functions to verify that the pairing algorithm
+ * works correctly with different group sizes and participant counts. Tests are only
+ * executed when NODE_ENV is set to 'test' to prevent accidental execution.
+ */
 import { createPairs, getCurrentRoundNumber } from "../../src/scripts/pairing.js";
 
 /**
- * Test code - wrap in a function or conditional to prevent auto-execution
+ * Runs a series of pairing tests with 5 participants and group size 2.
+ * Tests multiple rounds to verify that pairing history is correctly maintained
+ * and that the algorithm avoids duplicate pairings when possible.
+ *
+ * @example
+ * // Run tests manually
+ * runTests();
+ * // Outputs test results to console
+ *
+ * @returns {void}
  */
 function runTests() {
   console.log("\n=== Testing with 5 emails, group size 2 ===")

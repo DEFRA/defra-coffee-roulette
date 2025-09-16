@@ -1,4 +1,5 @@
 import { hasPreviousPairing } from "./pairing-history.js"
+
 /**
  * Generates groups for the next round, delegating to the appropriate function based on group size.
  *

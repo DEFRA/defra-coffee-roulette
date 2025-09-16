@@ -62,6 +62,16 @@ export function initializeTooltips() {
   })
 }
 
+/**
+ * Sets up a global click handler to automatically hide tooltips when buttons are clicked.
+ * Prevents tooltips from staying visible after button interactions that might remove their target elements.
+ *
+ * @example
+ * // Setup global tooltip management on app initialization
+ * setupGlobalTooltipHandler();
+ *
+ * @returns {void}
+ */
 export function setupGlobalTooltipHandler() {
   // Global click handler to hide tooltips on any button click
   document.addEventListener("click", function (event) {

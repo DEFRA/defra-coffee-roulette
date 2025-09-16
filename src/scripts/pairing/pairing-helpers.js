@@ -1,3 +1,15 @@
+/**
+ * Shuffles a list of participants using the Fisher-Yates algorithm.
+ * Creates a copy of the input array to avoid mutating the original.
+ *
+ * @param {string[]} participantList - Array of participant email addresses to shuffle
+ * @returns {string[]} A new array with participants in random order
+ *
+ * @example
+ * const participants = ['john@example.com', 'jane@example.com', 'bob@example.com'];
+ * const shuffled = shuffle(participants);
+ * // Returns participants in random order, original array unchanged
+ */
 function shuffle(participantList) {
   const clonedParticipantList = [...participantList]
   let currentIndex = clonedParticipantList.length

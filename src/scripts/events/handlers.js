@@ -119,7 +119,19 @@ function setupEventHandlers(state) {
     saveState()
   }
 
-  // Helper function to validate group size
+  /**
+   * Validates group size against total participants and determines appropriate warnings.
+   * Calculates if participants would sit out and provides user feedback messages.
+   *
+   * @param {number} totalParticipants - Total number of participants
+   * @param {number} groupSize - Desired size for each group
+   * @param {boolean} allowOddGroups - Whether to allow uneven groups
+   * @returns {Object} Validation result object
+   * @returns {boolean} returns.isValid - Whether the configuration is valid
+   * @returns {boolean} returns.shouldBlock - Whether to prevent pairing from proceeding
+   * @returns {string} [returns.message] - Optional warning/info message for user
+   * @returns {string} [returns.type] - Message type for UI display ('info', 'warning')
+   */
   function validateGroupSize(totalParticipants, groupSize, allowOddGroups) {
     const remainder = totalParticipants % groupSize
 
