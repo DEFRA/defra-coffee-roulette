@@ -36,9 +36,14 @@ function renderParticipantList(getParticipants, removeParticipant, saveState) {
   const ul = document.getElementById("participant-list")
   ul.innerHTML = ""
 
-  getParticipants().forEach(function (email) {
+  getParticipants().forEach(function (email, idx) {
     const li = document.createElement("li")
     li.className = "list-group-item d-flex justify-content-between align-items-center"
+
+    // Add the number before the email
+    const numberSpan = document.createElement("span")
+    numberSpan.className = "me-2 fw-bold text-secondary"
+    numberSpan.textContent = (idx + 1) + "."
 
     const emailSpan = document.createElement("span")
     emailSpan.textContent = email // Full email on hover
@@ -59,7 +64,13 @@ function renderParticipantList(getParticipants, removeParticipant, saveState) {
       hideAllTooltips()
     }
 
-    li.appendChild(emailSpan)
+    // Layout: number + email + remove button
+     const leftDiv = document.createElement("div")
+    leftDiv.className = "d-flex align-items-center"
+    leftDiv.appendChild(numberSpan)
+    leftDiv.appendChild(emailSpan)
+
+    li.appendChild(leftDiv)
     li.appendChild(removeBtn)
     ul.appendChild(li)
   })

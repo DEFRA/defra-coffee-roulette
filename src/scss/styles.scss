@@ -75,3 +75,15 @@
     padding: 0 2rem;
   }
 }
+
+/* Show 5 items at a time */
+.show-items-and-scroll {
+  max-height: calc(48px * 5);
+  overflow-y: auto;
+}
+
+/* Show 10 items at a time */
+.show-10-and-scroll {
+  max-height: calc(48px * 15);
+  overflow-y: auto;
+}
