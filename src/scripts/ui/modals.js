@@ -65,13 +65,25 @@ function setupEmailTemplateModal() {
           return
         }
 
-        saveEmailTemplate(template)
-        saveTeamName(teamName)
-        updateTemplateStatus()
+        // validate template format and security
+        const validation = validateEmailTemplate(template)
+        if (!validation.isValid) {
+          showAlert(`Template validation failed: ${validation.error}`, "danger")
+          return
+        }
 
-        // Hide the modal
-        if (emailTemplateModal) {
-          bootstrap.Modal.getOrCreateInstance(emailTemplateModal).hide()
+        try {
+          saveEmailTemplate(template)
+          saveTeamName(teamName)
+          updateTemplateStatus()
+
+          // Hide the modal
+          if (emailTemplateModal) {
+            bootstrap.Modal.getOrCreateInstance(emailTemplateModal).hide()
+          }
+        } catch (error) {
+          showAlert(`Error saving template: ${error.message}`, "danger")
+          console.error("Template save error:", error)
         }
       }
     }

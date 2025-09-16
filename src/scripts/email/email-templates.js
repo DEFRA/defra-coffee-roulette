@@ -1,3 +1,5 @@
+import { safeTemplateReplace, sanitizeInput, validateEmailTemplate } from "../validation/email-template.js"
+
 /**
  * Email template management
  */
@@ -44,7 +46,16 @@ function loadEmailTemplate() {
  * @param {string} template - The email template to save.
  */
 function saveEmailTemplate(template) {
-  localStorage.setItem("emailTemplate", template)
+  // validate
+  const validation = validateEmailTemplate(template)
+
+  if (!validation.isValid) {
+    throw new Error("Invalid email template: " + validation.error)
+  }
+
+  // sanitize
+  const sanitizedTemplate = sanitizeInput(template)
+  localStorage.setItem("emailTemplate", sanitizedTemplate)
 }
 
 /**
@@ -61,7 +72,8 @@ function loadTeamName() {
  * @param {string} teamName - The team name to save.
  */
 function saveTeamName(teamName) {
-  localStorage.setItem("teamName", teamName)
+  const sanitizedTeamName = sanitizeInput(teamName, 250) // limit to 250 chars
+  localStorage.setItem("teamName", sanitizedTeamName)
 }
 
 /**
@@ -117,8 +129,8 @@ function getPairText() {
  * @returns {string} The email body content.
  */
 function generateEmailBody() {
-  const template = loadEmailTemplate()
-  const teamName = loadTeamName()
+  const template = sanitizeInput(loadEmailTemplate())
+  const teamName = sanitizeInput(loadTeamName(), 250)
   const currentDate = new Date()
   const monthName = currentDate.toLocaleString("default", { month: "long" })
   const year = currentDate.getFullYear()
@@ -129,7 +141,8 @@ function generateEmailBody() {
     pairText: getPairText(),
     year,
   }
-  return template.replace(/\$\{(.*?)\}/g, (_, key) => placeholders[key] || "")
+
+  return safeTemplateReplace(template, placeholders)
 }
 
 export {

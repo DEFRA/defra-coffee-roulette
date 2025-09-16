@@ -4,7 +4,7 @@
 import { generateEmailBody } from "./email-templates.js"
 import { showAlert } from "../ui/alerts.js"
 
- function emailCoffeePairs(getRoundNumber) {
+function emailCoffeePairs(getRoundNumber) {
   const pairs = document.querySelectorAll("#coffee-pairs-list li")
   if (pairs.length === 0) {
     showAlert("No pairs to export. Generate pairs first.", "warning")
