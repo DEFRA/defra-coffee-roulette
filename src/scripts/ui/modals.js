@@ -65,7 +65,9 @@ function setupEmailTemplateModal() {
   // Save template when save button is clicked
   if (saveEmailTemplateBtn) {
     saveEmailTemplateBtn.onclick = function () {
-      if (emailTemplateEditor && teamNameInput) {
+      if (!emailTemplateEditor || !teamNameInput) {return}
+
+
         const template = emailTemplateEditor.value.trim()
         const teamName = teamNameInput.value.trim()
 
@@ -99,7 +101,7 @@ function setupEmailTemplateModal() {
           showAlert(`Error saving template: ${error.message}`, "danger")
           console.error("Template save error:", error)
         }
-      }
+      
     }
   }
 

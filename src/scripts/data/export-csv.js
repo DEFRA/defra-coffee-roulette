@@ -105,6 +105,7 @@ function importCSVData(event) {
     // Build history object
     historyRows.forEach(function (row, index) {
       const commaIndex = row.indexOf(",")
+
       if (commaIndex === -1) return
 
       const email = row.substring(0, commaIndex).trim()
@@ -112,17 +113,16 @@ function importCSVData(event) {
 
       const pairs = processPairingData(email, pairedWith, allPairKeys)
 
-      if (pairs && pairs.length > 0) {
-        history[email.trim()] = {
-          pairKeys: Array.from(allPairKeys).filter(function (key) {
-            return key.includes(email.trim())
-          }),
-          hasPairedWith: pairs.reduce(function (acc, pair) {
-            acc[pair.pairedEmail] = acc[pair.pairedEmail] || []
-            acc[pair.pairedEmail].push({ round: pair.round, date: pair.date })
-            return acc
-          }, {}),
-        }
+      if (!pairs || pairs.length === 0) return
+      history[email.trim()] = {
+        pairKeys: Array.from(allPairKeys).filter(function (key) {
+          return key.includes(email.trim())
+        }),
+        hasPairedWith: pairs.reduce(function (acc, pair) {
+          acc[pair.pairedEmail] = acc[pair.pairedEmail] || []
+          acc[pair.pairedEmail].push({ round: pair.round, date: pair.date })
+          return acc
+        }, {}),
       }
     })
 
