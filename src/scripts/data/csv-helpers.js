@@ -1,9 +1,7 @@
-
 const EMAIL_LINE_REGEX = /^Emails,"(.+)"$/
 const PAIRS_SINGLE_LINE_REGEX = /^Pairs,"(.+)"$/
 const PAIRS_CAPTURE_REGEX = /^Pairs,"(.+)"$/
 const PAIRS_MULTILINE_START_REGEX = /^Pairs,"/
-
 
 /**
  * CSV parsing helper functions for coffee roulette pairing data.
@@ -186,7 +184,7 @@ function parseCSVContent(content) {
     if (PAIRS_SINGLE_LINE_REGEX.exec(line)) {
       // Single line pairs
       const pairsMatch = PAIRS_CAPTURE_REGEX.exec(line)
-      
+
       if (!pairsMatch) return { pairsArray: [], nextIdx: i }
 
       const pairsText = pairsMatch[1]
