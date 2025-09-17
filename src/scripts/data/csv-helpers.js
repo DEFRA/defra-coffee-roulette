@@ -28,11 +28,16 @@ function processPairingData(email, pairedWith, allPairKeys) {
         })
         .join("-")
       allPairKeys.add(pairKey)
+    
+      // Use DD/MM/YYYY format
+    const dateString = dateInfo.replace(")", "").trim()
+    const [day, month, year] = dateString.split("/")
+    const validDate = new Date(year, month -1, day)
 
       return {
         pairedEmail: pairedEmail.trim(),
         round: parseInt(round.trim()),
-        date: new Date(dateInfo.replace(")", "").trim()).toISOString(),
+        date: validDate.toISOString(),
       }
     })
     .filter(Boolean)
