@@ -181,7 +181,7 @@ function parseCSVContent(content) {
     let pairsArray = []
     let i = startIdx
     const line = lines[i].trim()
-    
+
     if (PAIRS_SINGLE_LINE_REGEX.exec(line)) {
       // Single line pairs
       const pairsMatch = PAIRS_CAPTURE_REGEX.exec(line)
