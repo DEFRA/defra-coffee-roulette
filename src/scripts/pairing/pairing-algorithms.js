@@ -86,6 +86,7 @@ function generateGroupsAvoidingRepeats(participants, groupSize, allowOddGroup) {
   // If we have exactly one group of the target size, check if it's been done before
   if (availableParticipants.length === groupSize) {
     const potentialGroup = [...availableParticipants]
+
     if (hasPreviousPairing(potentialGroup)) {
       // This exact group composition has been done before
       console.log("This group composition has already been used in a previous round")
