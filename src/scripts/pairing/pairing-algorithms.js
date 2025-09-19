@@ -68,6 +68,8 @@ function generatePairsAvoidingRepeats(participants, allowOddGroup) {
       pairs[pairs.length - 1].push(remaining[remaining.length - 1])
     }
   }
+
+  return pairs
 }
 
 /**
