@@ -134,15 +134,25 @@ function validateEmailTemplate(template, maxLength = 10000) {
  *
  * @param {string} template - The template string containing placeholders in ${key} format
  * @param {Object} placeholders - Object containing placeholder key-value pairs
- * @param {string} placeholders.monthName - Month name for email template
- * @param {string} placeholders.pairText - Formatted pairs text for email template
- * @param {string} placeholders.teamName - Team name for email template
- * @param {string|number} placeholders.year - Year for email template
+ * @param {string} placeholders.monthName - **Required** Month name for email template
+ * @param {string} placeholders.pairText - **Required** Formatted pairs text for email template
+ * @param {string} [placeholders.teamName] - **Optional** Team name for email template
+ * @param {string|number} [placeholders.year] - **Optional** Year for email template
  *
  * @returns {string} The rendered template with all placeholders replaced by sanitized content
  *
  * @example
- * // Basic template replacement
+ * // Basic template replacement (required placeholders only)
+ * const template = 'Hello ${monthName}, here are the ${pairText}';
+ * const placeholders = {
+ *   monthName: 'January',
+ *   pairText: 'John & Jane\nBob & Alice'
+ * };
+ * const result = safeTemplateReplace(template, placeholders);
+ * console.log(result); // "Hello January, here are the John & Jane\nBob & Alice"
+ *
+ * @example
+ * // With optional placeholders included
  * const template = 'Hello ${monthName}, here are the ${pairText} for ${year}';
  * const placeholders = {
  *   monthName: 'January',

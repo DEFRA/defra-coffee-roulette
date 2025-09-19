@@ -16,6 +16,7 @@ import {
   defaultEmailTemplate,
 } from "../email/email-templates.js"
 import { showAlert } from "./alerts.js"
+import { validateEmailTemplate } from "../validation/email-template.js"
 
 const defaultTeamName = "DDTS Digital Team"
 
@@ -65,40 +66,42 @@ function setupEmailTemplateModal() {
   // Save template when save button is clicked
   if (saveEmailTemplateBtn) {
     saveEmailTemplateBtn.onclick = function () {
-      if (emailTemplateEditor && teamNameInput) {
-        const template = emailTemplateEditor.value.trim()
-        const teamName = teamNameInput.value.trim()
+      if (!emailTemplateEditor || !teamNameInput) {
+        return
+      }
 
-        if (template === "") {
-          showAlert("Template cannot be empty!", "warning")
-          return
+      const template = emailTemplateEditor.value.trim()
+      const teamName = teamNameInput.value.trim()
+
+      if (template === "") {
+        showAlert("Template cannot be empty!", "warning")
+        return
+      }
+
+      if (teamName === "") {
+        showAlert("Team name cannot be empty!", "warning")
+        return
+      }
+
+      // validate template format and security
+      const validation = validateEmailTemplate(template)
+      if (!validation.isValid) {
+        showAlert(`Template validation failed: ${validation.error}`, "danger")
+        return
+      }
+
+      try {
+        saveEmailTemplate(template)
+        saveTeamName(teamName)
+        updateTemplateStatus()
+
+        // Hide the modal
+        if (emailTemplateModal) {
+          bootstrap.Modal.getOrCreateInstance(emailTemplateModal).hide()
         }
-
-        if (teamName === "") {
-          showAlert("Team name cannot be empty!", "warning")
-          return
-        }
-
-        // validate template format and security
-        const validation = validateEmailTemplate(template)
-        if (!validation.isValid) {
-          showAlert(`Template validation failed: ${validation.error}`, "danger")
-          return
-        }
-
-        try {
-          saveEmailTemplate(template)
-          saveTeamName(teamName)
-          updateTemplateStatus()
-
-          // Hide the modal
-          if (emailTemplateModal) {
-            bootstrap.Modal.getOrCreateInstance(emailTemplateModal).hide()
-          }
-        } catch (error) {
-          showAlert(`Error saving template: ${error.message}`, "danger")
-          console.error("Template save error:", error)
-        }
+      } catch (error) {
+        showAlert(`Error saving template: ${error.message}`, "danger")
+        console.error("Template save error:", error)
       }
     }
   }

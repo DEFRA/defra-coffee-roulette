@@ -30,7 +30,9 @@ We hope you really enjoy your coffee roulette and for those new this month, here
 
 Happy coffee chatting! ☕
 
-Best regards,`
+Best regards,
+
+\${teamName}`
 
 /**
  * Loads the email template from local storage or returns the default template.
@@ -112,7 +114,7 @@ function extractNameFromEmail(email) {
  * @returns {string} The pair text.
  */
 function getPairText() {
-  const pairs = document.querySelectorAll("#pairs-list li")
+  const pairs = document.querySelectorAll("#coffee-pairs-list li")
   if (pairs.length === 0) return ""
 
   return Array.from(pairs)
