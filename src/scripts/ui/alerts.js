@@ -30,7 +30,7 @@
  */
 function showAlert(message, type = "danger", focusTarget = null) {
   const container = document.getElementById("alert-container")
-  const alertId = `alert-${Date.now()}` // Add this line - create unique ID
+  const alertId = `alert-${Date.now()}`
 
   container.innerHTML = `<div id="${alertId}" class="alert alert-${type} alert-dismissible fade show${focusTarget ? " alert-clickable" : ""}" role="alert">
     ${message}
