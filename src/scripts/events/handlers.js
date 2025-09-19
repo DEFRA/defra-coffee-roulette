@@ -85,12 +85,19 @@ function setupEventHandlers(state) {
     emailCoffeePairs(getRoundNumber)
   }
 
+  
+
   // Generate pairs button handler
   document.getElementById("pair-btn").onclick = function () {
     const groupSizeInput = document.getElementById("group-size")
     const groupSize = parseInt(groupSizeInput.value, 10)
     const allowOddGroups = document.getElementById("allow-odd-groups").checked
 
+    if (getParticipants().length === 0) {
+      showAlert("Please add participants before generating pairs.", "danger", "#add-participants-btn")
+
+      return
+    }
     if (isNaN(groupSize) || groupSize < 2 || groupSize > getParticipants().length) {
       showAlert("Please enter a valid group size between 2 and " + getParticipants().length + ".")
       return

@@ -12,6 +12,7 @@
  *
  * @param {string} message - The message text to display in the alert
  * @param {string} [type="danger"] - Bootstrap alert type (primary, secondary, success, danger, warning, info, light, dark)
+ * @param {string} [focusTarget] - Optional CSS selector of element to focus when alert is clicked
  *
  * @example
  * // Show success message
@@ -27,10 +28,48 @@
  *
  * @returns {void}
  */
-export function showAlert(message, type = "danger") {
+function showAlert(message, type = "danger", focusTarget = null) {
   const container = document.getElementById("alert-container")
-  container.innerHTML = `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+  const alertId = `alert-${Date.now()}` // Add this line - create unique ID
+  
+  container.innerHTML = `<div id="${alertId}" class="alert alert-${type} alert-dismissible fade show${focusTarget ? ' alert-clickable' : ''}" role="alert">
     ${message}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`
+
+  if (focusTarget) {
+    const alertElement = document.getElementById(alertId)
+    if (alertElement) {
+      alertElement.style.cursor = 'pointer'
+      alertElement.addEventListener('click', function(e){
+        if(!e.target.classList.contains('btn-close')) {
+          const targetElement = document.querySelector(focusTarget)
+          if(targetElement){
+            targetElement.focus()
+            targetElement.scrollIntoView({behavior: "smooth", block: "center"})
+          }
+        }
+      })
+    }
+  }
 }
+
+/**
+ * Sets up click handler for data storage notice to focus export button.
+ * When users click on the data storage alert, focuses the export data button.
+ *
+ * @returns {void}
+ */
+function setupDataStorageNoticeHandler() {
+  const storageAlert = document.querySelector(".alert.alert-danger")
+  if (storageAlert) {
+    storageAlert.addEventListener("click", function () {
+      document.getElementById("export-data-btn").focus()
+    })
+
+    //Make cursor a pointer to indicate it's clickable
+    storageAlert.style.cursor = "pointer"
+  }
+}
+
+export { showAlert, setupDataStorageNoticeHandler }

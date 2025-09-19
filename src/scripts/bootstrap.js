@@ -32,6 +32,7 @@ import { setupEmailTemplateModal } from "./ui/modals.js"
 import { initializeTooltips, setupGlobalTooltipHandler } from "./ui/tooltips.js"
 import { setupEventHandlers } from "./events/handlers.js"
 import { updateRoundsBadgeDisplay } from "./utils/helpers.js"
+import { setupDataStorageNoticeHandler} from "./ui/alerts.js"
 
 import { exportData, importCSVData } from "./data/export-csv.js"
 
@@ -64,6 +65,8 @@ if (typeof window !== "undefined") {
 
     // Render initial UI
     renderParticipantList(getParticipants, removeParticipant, saveState)
+
+    setupDataStorageNoticeHandler()
     renderHistory(getPreviousPairings)
     renderPairs(getPairsThisRound()) // Render saved current pairs
     updateRoundsBadgeDisplay(getPreviousPairings)
