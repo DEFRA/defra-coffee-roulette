@@ -31,8 +31,8 @@
 function showAlert(message, type = "danger", focusTarget = null) {
   const container = document.getElementById("alert-container")
   const alertId = `alert-${Date.now()}` // Add this line - create unique ID
-  
-  container.innerHTML = `<div id="${alertId}" class="alert alert-${type} alert-dismissible fade show${focusTarget ? ' alert-clickable' : ''}" role="alert">
+
+  container.innerHTML = `<div id="${alertId}" class="alert alert-${type} alert-dismissible fade show${focusTarget ? " alert-clickable" : ""}" role="alert">
     ${message}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`
@@ -40,13 +40,13 @@ function showAlert(message, type = "danger", focusTarget = null) {
   if (focusTarget) {
     const alertElement = document.getElementById(alertId)
     if (alertElement) {
-      alertElement.style.cursor = 'pointer'
-      alertElement.addEventListener('click', function(e){
-        if(!e.target.classList.contains('btn-close')) {
+      alertElement.style.cursor = "pointer"
+      alertElement.addEventListener("click", function (e) {
+        if (!e.target.classList.contains("btn-close")) {
           const targetElement = document.querySelector(focusTarget)
-          if(targetElement){
+          if (targetElement) {
             targetElement.focus()
-            targetElement.scrollIntoView({behavior: "smooth", block: "center"})
+            targetElement.scrollIntoView({ behavior: "smooth", block: "center" })
           }
         }
       })

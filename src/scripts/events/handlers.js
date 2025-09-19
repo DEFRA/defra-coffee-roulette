@@ -85,8 +85,6 @@ function setupEventHandlers(state) {
     emailCoffeePairs(getRoundNumber)
   }
 
-  
-
   // Generate pairs button handler
   document.getElementById("pair-btn").onclick = function () {
     const groupSizeInput = document.getElementById("group-size")
