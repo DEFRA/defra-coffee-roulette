@@ -87,3 +87,18 @@
   max-height: calc(48px * 15);
   overflow-y: auto;
 }
+
+// Clickable alert styling
+.alert-clickable {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  // Don't show pointer cursor on close button
+  .btn-close {
+    cursor: pointer;
+  }
+}
