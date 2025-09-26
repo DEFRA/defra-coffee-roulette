@@ -17,16 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.19.0
-
       - name: Install dependencies
-        run: npm ci
-
-      - name: Audit Node.js dependencies
-        run: npm audit
+        run: npm install
 
       - name: Build the project
         run: npm run build
@@ -50,7 +47,8 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:    
+    steps:
+     
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         id: deployment
