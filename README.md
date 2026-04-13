@@ -16,7 +16,7 @@ cd defra-coffee-roulette
 Make sure you have [Node.js](https://nodejs.org/) (v18 or higher recommended) and [npm](https://www.npmjs.com/) installed.
 
 ```bash
-npm install
+npm install --ignore-scripts
 ```
 
 ### 3. Start the Development Server
